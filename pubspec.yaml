@@ -36,7 +36,11 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+
+  # add dependency on Adobe Pinned, BlendMask
   adobe_xd: ^2.0.0+1
+
+  # add dependency on D. Field SvgPicture
   flutter_svg: ^0.21.0+1
 
 dev_dependencies:
