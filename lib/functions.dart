@@ -7,6 +7,8 @@ const colorFulvous = Color(0xffE57608);
 const colorPhilippineOrange = Color(0xffFF7000);
 const colorPrincetonOrange = Color(0xffF2822A);
 const colorWillpowerOrange = Color(0xffFC5700);
+const colorChineseSilver = Color(0xffCCCCCC);
+const colorKUCrimson = Color(0xffE50913);
 
 const linearButton = LinearGradient(
   begin: Alignment(0.0, -1.0),
@@ -125,7 +127,7 @@ createStart(final BuildContext mContext) {
   );
 }
 
-Center createSvgLogo() => Center(
+createSvgLogo() => Center(
       child: SizedBox(
         height: 170.0,
         child: Column(
@@ -148,3 +150,87 @@ Center createSvgLogo() => Center(
         ),
       ),
     );
+
+createPrimary() => Container(
+  decoration: const BoxDecoration(
+    image: DecorationImage(
+      image: AssetImage('res/images/img_background_1.png'),
+      fit: BoxFit.cover,
+    ),
+  ),
+);
+
+createTitle1(final String text) => Container(
+  alignment: Alignment.topLeft,
+  margin: const EdgeInsets.all(20.0),
+  child: Text(
+    text,
+    style: const TextStyle(
+      fontFamily: 'Calibri',
+      fontSize: 30,
+      color: colorFulvous,
+      fontWeight: FontWeight.w700,
+    ),
+  ),
+);
+
+createInputDecoration(final String hintText) => InputDecoration(
+  border: InputBorder.none,
+  hintText: hintText,
+  hintStyle: const TextStyle(
+      color: colorChineseSilver,
+      fontStyle: FontStyle.italic
+  ),
+  filled: true,
+  fillColor: colorChineseBlack.withOpacity(0.75),
+  contentPadding: const EdgeInsets.only(
+      left: 14.0, bottom: 6.0, top: 8.0),
+  focusedBorder: const OutlineInputBorder(
+    borderSide: BorderSide(color: colorFulvous),
+  ),
+  focusedErrorBorder: const OutlineInputBorder(
+    borderSide: BorderSide(color: colorKUCrimson),
+  ),
+  errorBorder: const OutlineInputBorder(
+    borderSide: BorderSide(color: colorKUCrimson),
+  ),
+);
+
+createLabel(final String label) => Text(
+  label,
+  style: const TextStyle(
+    fontFamily: 'Calibri',
+    fontSize: 25,
+    color: Colors.white,
+  ),
+);
+
+createTextButton(final BuildContext mContext, final String firstText, final String lastText, final double width) => SizedBox(
+  width: width,
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    children: <Widget>[
+
+      Text(
+        firstText,
+        style: const TextStyle(
+          fontFamily: 'Tahoma',
+          fontStyle: FontStyle.italic,
+          fontSize: 15,
+          color: Colors.white,
+        ),
+      ),
+
+      Text(
+        lastText,
+        style: const TextStyle(
+          fontFamily: 'Tahoma',
+          fontStyle: FontStyle.italic,
+          fontSize: 15,
+          color: colorFulvous,
+        ),
+      ),
+
+    ],
+  ),
+);
