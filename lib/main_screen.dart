@@ -5,6 +5,7 @@ import 'package:news_expose_2k21/register_screen.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => Scaffold(
         body: SafeArea(
@@ -20,7 +21,7 @@ class MainScreen extends StatelessWidget {
                         onTap: () => Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (BuildContext context) =>
+                                builder: (context) =>
                                     const LoginScreen())),
                         child: Container(
                           height: 50.0,
@@ -45,7 +46,7 @@ class MainScreen extends StatelessWidget {
                         onTap: () => Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (BuildContext context) =>
+                                builder: (context) =>
                                     const RegisterScreen())),
                         child: Container(
                           height: 50.0,

@@ -165,111 +165,102 @@ initLogo() => Center(
     );
 
 initBackground() => Container(
-  decoration: const BoxDecoration(
-    image: DecorationImage(
-      image: AssetImage('res/images/img_background_1.png'),
-      fit: BoxFit.cover,
-    ),
-  ),
-);
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('res/images/img_background_1.png'),
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
 
 initTitle(final text) => Container(
-  alignment: Alignment.topLeft,
-  margin: const EdgeInsets.all(20.0),
-  child: Text(
-    text,
-    style: const TextStyle(
-      fontFamily: 'Calibri',
-      fontSize: 30,
-      color: colorFulvous,
-      fontWeight: FontWeight.w700,
-    ),
-  ),
-);
+      alignment: Alignment.topLeft,
+      margin: const EdgeInsets.all(20.0),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontFamily: 'Calibri',
+          fontSize: 30,
+          color: colorFulvous,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
 
 initInputDecoration(final hintText) => InputDecoration(
-  border: InputBorder.none,
-  hintText: hintText,
-  hintStyle: const TextStyle(
-      color: colorChineseSilver,
-      fontStyle: FontStyle.italic
-  ),
-  filled: true,
-  fillColor: colorChineseBlack.withOpacity(0.75),
-  contentPadding: const EdgeInsets.only(
-      left: 14.0, bottom: 6.0, top: 8.0),
-  focusedBorder: const OutlineInputBorder(
-    borderSide: BorderSide(color: colorFulvous),
-  ),
-  focusedErrorBorder: const OutlineInputBorder(
-    borderSide: BorderSide(color: colorKUCrimson),
-  ),
-  errorBorder: const OutlineInputBorder(
-    borderSide: BorderSide(color: colorKUCrimson),
-  ),
-);
+      border: InputBorder.none,
+      hintText: hintText,
+      hintStyle: const TextStyle(
+          color: colorChineseSilver, fontStyle: FontStyle.italic),
+      filled: true,
+      fillColor: colorChineseBlack.withOpacity(0.75),
+      contentPadding: const EdgeInsets.only(left: 14.0, bottom: 6.0, top: 8.0),
+      focusedBorder: const OutlineInputBorder(
+        borderSide: BorderSide(color: colorFulvous),
+      ),
+      focusedErrorBorder: const OutlineInputBorder(
+        borderSide: BorderSide(color: colorKUCrimson),
+      ),
+      errorBorder: const OutlineInputBorder(
+        borderSide: BorderSide(color: colorKUCrimson),
+      ),
+    );
 
 initLabel(final label) => Text(
-  label,
-  style: const TextStyle(
-    fontFamily: 'Calibri',
-    fontSize: 25,
-    color: Colors.white,
-  ),
-);
+      label,
+      style: const TextStyle(
+        fontFamily: 'Calibri',
+        fontSize: 25,
+        color: Colors.white,
+      ),
+    );
 
-initTextButton(final context, final firstText, final lastText, final width) => SizedBox(
-  width: width,
-  child: GestureDetector(
-    onTap: () => lastText.contains('Sign Up')
-    ? Navigator
-        .pushReplacement(
-    context, MaterialPageRoute(
-    builder: (context) => RegisterScreen()))
-    : Navigator
-        .pushReplacement(
-    context, MaterialPageRoute(
-    builder: (context) => LoginScreen())),
-    child: Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: <Widget>[
-
-      Text(
-        firstText,
-        style: const TextStyle(
-          fontFamily: 'Tahoma',
-          fontStyle: FontStyle.italic,
-          fontSize: 15,
-          color: Colors.white,
+initTextButton(final context, final firstText, final lastText, final width) =>
+    SizedBox(
+      width: width,
+      child: GestureDetector(
+        onTap: () => lastText.contains('Sign Up')
+            ? Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => RegisterScreen()))
+            : Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => LoginScreen())),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Text(
+              firstText,
+              style: const TextStyle(
+                fontFamily: 'Tahoma',
+                fontStyle: FontStyle.italic,
+                fontSize: 15,
+                color: Colors.white,
+              ),
+            ),
+            Text(
+              lastText,
+              style: const TextStyle(
+                fontFamily: 'Tahoma',
+                fontStyle: FontStyle.italic,
+                fontSize: 15,
+                color: colorFulvous,
+              ),
+            ),
+          ],
         ),
       ),
+    );
 
-      Text(
-        lastText,
-        style: const TextStyle(
-          fontFamily: 'Tahoma',
-          fontStyle: FontStyle.italic,
-          fontSize: 15,
-          color: colorFulvous,
-        ),
-      ),
-
-    ],
-    ),
-  ),
-);
-
-onFocusChange(formKey) async {
-  assert(formKey != null);
+onFocusChange(final formKey) async {
 
   formKey.currentState.save();
   formKey.currentState.validate();
 }
 
 late ProgressDialog buildProgressDialog;
-initProgressDialog(context, message) async {
 
-  buildProgressDialog = ProgressDialog(await context, type: ProgressDialogType.normal);
+initProgressDialog(final context, final message) async {
+  buildProgressDialog =
+      ProgressDialog(await context, type: ProgressDialogType.normal);
   buildProgressDialog.style(
       message: message,
       borderRadius: 10.0,
@@ -282,20 +273,14 @@ initProgressDialog(context, message) async {
       elevation: 10.0,
       insetAnimCurve: Curves.easeInOut,
       messageTextStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 19.0,
-          fontWeight: FontWeight.w600)
-  );
+          color: Colors.white, fontSize: 19.0, fontWeight: FontWeight.w600));
 }
 
-buildFlutterToast(msg, color, {isLong = false}) => Fluttertoast.showToast(
+buildFlutterToast(final msg, final color, {isLong = false}) => Fluttertoast.showToast(
     msg: msg,
-    toastLength: isLong
-        ? Toast.LENGTH_LONG
-        : Toast.LENGTH_SHORT,
+    toastLength: isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT,
     gravity: ToastGravity.SNACKBAR,
     timeInSecForIosWeb: 1,
     backgroundColor: colorChineseBlack,
     textColor: color,
-    fontSize: 16.0
-);
+    fontSize: 16.0);
