@@ -1,6 +1,9 @@
 import 'package:adobe_xd/adobe_xd.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:news_expose_2k21/register_screen.dart';
+
+import 'login_screen.dart';
 
 const colorChineseBlack = Color(0xff151515);
 const colorFulvous = Color(0xffE57608);
@@ -205,9 +208,19 @@ createLabel(final String label) => Text(
   ),
 );
 
-createTextButton(final BuildContext mContext, final String firstText, final String lastText, final double width) => SizedBox(
+createTextButton(final BuildContext context, final String firstText, final String lastText, final double width) => SizedBox(
   width: width,
-  child: Row(
+  child: GestureDetector(
+    onTap: () => lastText.contains('Sign Up')
+    ? Navigator
+        .pushReplacement(
+    context, MaterialPageRoute(
+    builder: (context) => RegisterScreen()))
+    : Navigator
+        .pushReplacement(
+    context, MaterialPageRoute(
+    builder: (context) => LoginScreen())),
+    child: Row(
     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     children: <Widget>[
 
@@ -232,5 +245,6 @@ createTextButton(final BuildContext mContext, final String firstText, final Stri
       ),
 
     ],
+    ),
   ),
 );
