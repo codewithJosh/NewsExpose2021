@@ -42,6 +42,12 @@ dependencies:
 
   # add dependency on D. Field SvgPicture
   flutter_svg: ^0.21.0+1
+  progress_dialog_null_safe: ^1.0.7
+  firebase_core: ^2.2.0
+  firebase_auth: ^4.1.2
+  cloud_firestore: ^4.0.5
+  package_info_plus: ^3.0.2
+  fluttertoast: ^8.1.1
 
 dev_dependencies:
   flutter_test:

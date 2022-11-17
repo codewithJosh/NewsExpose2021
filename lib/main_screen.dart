@@ -10,7 +10,7 @@ class MainScreen extends StatelessWidget {
         body: SafeArea(
           child: Stack(
             children: <Widget>[
-              createStart(context),
+              initMain(context),
               Container(
                 alignment: Alignment.bottomCenter,
                 child: Row(
