@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:news_expose_2k21/create_update_screen.dart';
 import 'package:news_expose_2k21/functions.dart';
-
 import 'models/user_model.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,6 +15,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  late File _uri;
 
   _initAppBar() => AppBar(
     systemOverlayStyle: SystemUiOverlayStyle.light,
@@ -55,6 +59,70 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   );
 
+  _buildGetImage(final context) => showModalBottomSheet(
+        context: context,
+        builder: (context) => Container(
+            decoration: const BoxDecoration(
+              gradient: linearAppBar,
+            ),
+            height: 120,
+            child: Column(
+              children: <Widget>[
+
+                _initListTile(context, 'Capture Image with Camera'),
+
+                _initListTile(context, 'Select Image from Gallery')
+
+              ],
+            ),
+          )
+    );
+
+  _initListTile(final context, final text) => ListTile(
+
+    leading: SizedBox(
+      width: 30.0,
+      height: 25.0,
+      child: SvgPicture.string(
+        text.contains('Capture Image with Camera')
+            ? createCameraUIButton
+            : createGalleryUIButton,
+        allowDrawingOutsideViewBox: true,
+        fit: BoxFit.fill,
+      ),
+    ),
+
+    title: Text(
+      text,
+      style: const TextStyle(
+        color: Colors.white,
+      ),
+    ),
+
+    onTap: () async {
+      final image = await ImagePicker().pickImage(
+          source: text.contains('Capture Image with Camera')
+              ? ImageSource.camera
+              : ImageSource.gallery
+      );
+      Navigator.of(context).pop();
+      setState(() {
+        _uri =  File(image!.path);
+      });
+      _onCreateUpdate(context);
+    },
+  );
+
+  _onCreateUpdate(final context) {
+
+    final route = MaterialPageRoute(
+        builder: (context) => CreateUpdateScreen(
+            uri: _uri
+        )
+    );
+    Navigator.of(context).push(route);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,13 +155,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           ? Container(
                             alignment: Alignment.bottomRight,
                             padding: const EdgeInsets.only(right: 25.0, bottom: 25.0),
-                            child: SizedBox(
-                              width: 75.0,
-                              height: 75.0,
-                              child: SvgPicture.string(
-                                createCreateUpdateUIButton,
-                                allowDrawingOutsideViewBox: true,
-                                fit: BoxFit.fill,
+                            child: GestureDetector(
+                              onTap: () => _buildGetImage(context),
+                              child: SizedBox(
+                                width: 75.0,
+                                height: 75.0,
+                                child: SvgPicture.string(
+                                  createCreateUpdateUIButton,
+                                  allowDrawingOutsideViewBox: true,
+                                  fit: BoxFit.fill,
+                                ),
                               ),
                             ),
                           )
