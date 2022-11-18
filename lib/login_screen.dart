@@ -20,23 +20,27 @@ class _LoginScreenState extends State<LoginScreen> {
     await initProgressDialog(context, 'Logging in');
 
     if (_formKey.currentState!.validate()) {
-
       buildProgressDialog.show();
-      firebaseAuth.signInWithEmailAndPassword(email: _email, password: _password)
+      firebaseAuth
+          .signInWithEmailAndPassword(email: _email, password: _password)
           .then((user) {
         buildProgressDialog.hide();
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
-        buildFlutterToast('Welcome, You\'ve Successfully Login!', colorElectricGreen, isLong: true);
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()));
+        buildFlutterToast(
+            'Welcome, You\'ve Successfully Login!', colorElectricGreen,
+            isLong: true);
       }).catchError((e) {
         buildProgressDialog.hide();
-        if(e.toString().contains('auth/user-not-found')) {
+        if (e.toString().contains('auth/user-not-found')) {
           buildFlutterToast('User Doesn\'t Exist!', colorKUCrimson);
         } else if (e.toString().contains('auth/network-request-failed')) {
-          buildFlutterToast('No Internet Connection!',colorKUCrimson);
+          buildFlutterToast('No Internet Connection!', colorKUCrimson);
         } else if (e.toString().contains('auth/wrong-password')) {
-          buildFlutterToast('Incorrect Password!',colorKUCrimson);
+          buildFlutterToast('Incorrect Password!', colorKUCrimson);
         } else {
-          buildFlutterToast('Please Contact Your Service Provider', colorKUCrimson);
+          buildFlutterToast(
+              'Please Contact Your Service Provider', colorKUCrimson);
         }
       });
     }
@@ -58,9 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
         body: SafeArea(
           child: Stack(
             children: <Widget>[
-
               initBackground(),
-
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 20.0),
                 alignment: Alignment.center,
@@ -70,18 +72,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     key: _formKey,
                     child: Column(
                       children: <Widget>[
-
-                        const SizedBox(height: 20.0,),
-
+                        const SizedBox(
+                          height: 20.0,
+                        ),
                         initLogo(),
-
-                        const SizedBox(height: 88.0,),
-
+                        const SizedBox(
+                          height: 88.0,
+                        ),
                         SizedBox(
                           height: 375.0,
                           child: Stack(
                             children: <Widget>[
-
                               BlendMask(
                                 blendMode: BlendMode.softLight,
                                 child: Container(
@@ -90,15 +91,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                               ),
-
                               Container(
                                 margin: const EdgeInsets.all(15.0),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
-
                                     initTitle('Sign In'),
-
                                     Focus(
                                       onFocusChange: (_) =>
                                           onFocusChange(_formKey),
@@ -108,8 +106,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                               RegExp('[a-z_.0-9@]')),
                                           LengthLimitingTextInputFormatter(25),
                                         ],
-                                        style: const TextStyle(color: colorFulvous),
-                                        decoration: initInputDecoration('Email'),
+                                        style: const TextStyle(
+                                            color: colorFulvous),
+                                        decoration:
+                                            initInputDecoration('Email'),
                                         textInputAction: TextInputAction.next,
                                         onFieldSubmitted: (_) =>
                                             FocusScope.of(context).nextFocus(),
@@ -124,18 +124,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                           }
                                           return null;
                                         },
-                                        onSaved: (input) =>
-                                        _email = input!.trim().toLowerCase(),
+                                        onSaved: (input) => _email =
+                                            input!.trim().toLowerCase(),
                                       ),
                                     ),
-                                    const SizedBox(height: 20.0,),
-
+                                    const SizedBox(
+                                      height: 20.0,
+                                    ),
                                     Focus(
                                       onFocusChange: (_) =>
                                           onFocusChange(_formKey),
                                       child: TextFormField(
-                                        style: const TextStyle(color: colorFulvous),
-                                        decoration: initInputDecoration('Password'),
+                                        style: const TextStyle(
+                                            color: colorFulvous),
+                                        decoration:
+                                            initInputDecoration('Password'),
                                         obscureText: true,
                                         textInputAction: TextInputAction.next,
                                         onFieldSubmitted: (_) =>
@@ -147,31 +150,33 @@ class _LoginScreenState extends State<LoginScreen> {
                                           return null;
                                         },
                                         onSaved: (input) =>
-                                        _password = input!.trim(),
+                                            _password = input!.trim(),
                                       ),
                                     ),
-
                                     Container(
-                                      margin: const EdgeInsets.symmetric(vertical: 20.0),
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 20.0),
                                       height: 43.0,
                                       child: Stack(
                                         children: <Widget>[
-
                                           Container(
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(22.0),
+                                              borderRadius:
+                                                  BorderRadius.circular(22.0),
                                               gradient: linearButton,
                                             ),
                                           ),
-
                                           Center(
                                             child: SizedBox(
                                               width: width,
-                                              child: FloatingActionButton.extended(
-                                                onPressed: () => _onLogin(context),
+                                              child:
+                                                  FloatingActionButton.extended(
+                                                onPressed: () =>
+                                                    _onLogin(context),
                                                 heroTag: null,
                                                 splashColor: colorKUCrimson,
-                                                backgroundColor: Colors.transparent,
+                                                backgroundColor:
+                                                    Colors.transparent,
                                                 elevation: 0.0,
                                                 label: initLabel('SIGN IN'),
                                               ),
@@ -180,18 +185,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ],
                                       ),
                                     ),
-
-                                    initTextButton(context, 'Don\'t have an account yet?', 'Sign Up', 225.0),
-
+                                    initTextButton(
+                                        context,
+                                        'Don\'t have an account yet?',
+                                        'Sign Up',
+                                        225.0),
                                   ],
                                 ),
                               ),
                             ],
                           ),
                         ),
-
-                        const SizedBox(height: 20.0,),
-
+                        const SizedBox(
+                          height: 20.0,
+                        ),
                       ],
                     ),
                   ),

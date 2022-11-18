@@ -133,8 +133,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                               RegExp('[a-z_.0-9@]')),
                                           LengthLimitingTextInputFormatter(16),
                                         ],
-                                        style:
-                                            const TextStyle(color: colorFulvous),
+                                        style: const TextStyle(
+                                            color: colorFulvous),
                                         decoration:
                                             initInputDecoration('Username'),
                                         textInputAction: TextInputAction.next,
@@ -143,7 +143,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         validator: (input) {
                                           if (input!.isEmpty) {
                                             return 'Username is required!';
-                                          } else if (!input.startsWith('@ne.')) {
+                                          } else if (!input
+                                              .startsWith('@ne.')) {
                                             return 'Must starts with @ne.';
                                           } else if (input.length < 5) {
                                             return 'Provide a valid Username';
@@ -166,9 +167,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                               RegExp('[a-z_.0-9@]')),
                                           LengthLimitingTextInputFormatter(25),
                                         ],
-                                        style:
-                                            const TextStyle(color: colorFulvous),
-                                        decoration: initInputDecoration('Email'),
+                                        style: const TextStyle(
+                                            color: colorFulvous),
+                                        decoration:
+                                            initInputDecoration('Email'),
                                         textInputAction: TextInputAction.next,
                                         onFieldSubmitted: (_) =>
                                             FocusScope.of(context).nextFocus(),
@@ -183,8 +185,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           }
                                           return null;
                                         },
-                                        onSaved: (input) =>
-                                            _email = input!.trim().toLowerCase(),
+                                        onSaved: (input) => _email =
+                                            input!.trim().toLowerCase(),
                                       ),
                                     ),
                                     const SizedBox(
@@ -194,8 +196,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       onFocusChange: (_) =>
                                           onFocusChange(_formKey),
                                       child: TextFormField(
-                                        style:
-                                            const TextStyle(color: colorFulvous),
+                                        style: const TextStyle(
+                                            color: colorFulvous),
                                         decoration:
                                             initInputDecoration('Password'),
                                         obscureText: true,
@@ -219,8 +221,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       onFocusChange: (_) =>
                                           onFocusChange(_formKey),
                                       child: TextFormField(
-                                        style:
-                                            const TextStyle(color: colorFulvous),
+                                        style: const TextStyle(
+                                            color: colorFulvous),
                                         decoration: initInputDecoration(
                                             'Re-Enter Password'),
                                         obscureText: true,

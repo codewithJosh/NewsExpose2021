@@ -21,8 +21,7 @@ class MainScreen extends StatelessWidget {
                         onTap: () => Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    const LoginScreen())),
+                                builder: (context) => const LoginScreen())),
                         child: Container(
                           height: 50.0,
                           decoration: const BoxDecoration(
@@ -46,8 +45,7 @@ class MainScreen extends StatelessWidget {
                         onTap: () => Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    const RegisterScreen())),
+                                builder: (context) => const RegisterScreen())),
                         child: Container(
                           height: 50.0,
                           decoration: const BoxDecoration(
