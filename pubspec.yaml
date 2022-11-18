@@ -60,6 +60,8 @@ dependencies:
 
   # add dependency on K. Ponnam Flutter Toast
   fluttertoast: ^8.1.1
+
+  # add dependency on Flutter Image Picker
   image_picker: ^0.8.6
 
 dev_dependencies:
