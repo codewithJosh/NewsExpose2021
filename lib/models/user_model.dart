@@ -1,5 +1,3 @@
-
-
 class User {
   final String? buildNumber;
   final String? userBio;
@@ -20,7 +18,6 @@ class User {
   });
 
   factory User.fromDocument(final documentSnapshot) {
-
     return User(
       buildNumber: documentSnapshot['build_number'],
       userBio: documentSnapshot['user_bio'],

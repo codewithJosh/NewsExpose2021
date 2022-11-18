@@ -309,37 +309,33 @@ buildFlutterToast(final msg, final color, {isLong = false}) =>
         fontSize: 16.0);
 
 initTitle1() => Row(
-  children: const <Widget>[
-
-    Text(
-      'News',
-      style: TextStyle(
-        fontSize: 22,
-        color: Colors.white,
-        fontFamily: 'Tahoma',
-      ),
-    ),
-
-    Text(
-      'EXPOSÉ',
-      style: TextStyle(
-        fontSize: 22,
-        color: colorFulvous,
-        fontFamily: 'Tahoma',
-      ),
-    )
-  ],
-);
+      children: const <Widget>[
+        Text(
+          'News',
+          style: TextStyle(
+            fontSize: 22,
+            color: Colors.white,
+            fontFamily: 'Tahoma',
+          ),
+        ),
+        Text(
+          'EXPOSÉ',
+          style: TextStyle(
+            fontSize: 22,
+            color: colorFulvous,
+            fontFamily: 'Tahoma',
+          ),
+        )
+      ],
+    );
 
 buildCircularProgress() => Container(
-  alignment: Alignment.center,
-  child: const SizedBox(
-    height: 100.0,
-    width: 100.0,
-    child: CircularProgressIndicator(
-      valueColor: AlwaysStoppedAnimation(
-          colorPhilippineOrange
+      alignment: Alignment.center,
+      child: const SizedBox(
+        height: 100.0,
+        width: 100.0,
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation(colorPhilippineOrange),
+        ),
       ),
-    ),
-  ),
-);
+    );

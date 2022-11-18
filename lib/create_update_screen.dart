@@ -1,8 +1,10 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class CreateUpdateScreen extends StatefulWidget {
   final File uri;
+
   const CreateUpdateScreen({Key? key, required this.uri}) : super(key: key);
 
   @override
@@ -10,7 +12,6 @@ class CreateUpdateScreen extends StatefulWidget {
 }
 
 class _CreateUpdateScreenState extends State<CreateUpdateScreen> {
-
   @override
   Widget build(BuildContext context) {
     return Container();
