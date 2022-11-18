@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:news_expose_2k21/functions.dart';
 
+import 'models/user_model.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -72,19 +74,32 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Stack(
               children: <Widget>[
 
-                Container(
-                  alignment: Alignment.bottomRight,
-                  padding: const EdgeInsets.only(right: 25.0, bottom: 25.0),
-                  child: SizedBox(
-                    width: 75.0,
-                    height: 75.0,
-                    child: SvgPicture.string(
-                      createCreateUpdateUIButton,
-                      allowDrawingOutsideViewBox: true,
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                )
+                FutureBuilder(
+                    future: users.doc(userId).get(),
+                    builder: (context, dataSnapshot) {
+                      if(!dataSnapshot.hasData) {
+                        return buildCircularProgress();
+                      }
+
+                      final user = User.fromDocument(dataSnapshot.data);
+
+                      return user.userIsAdmin == true
+                          ? Container(
+                            alignment: Alignment.bottomRight,
+                            padding: const EdgeInsets.only(right: 25.0, bottom: 25.0),
+                            child: SizedBox(
+                              width: 75.0,
+                              height: 75.0,
+                              child: SvgPicture.string(
+                                createCreateUpdateUIButton,
+                                allowDrawingOutsideViewBox: true,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                          )
+                          : Container();
+                    }
+                ),
 
               ],
             ),

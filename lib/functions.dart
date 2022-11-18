@@ -54,6 +54,8 @@ const createDrawerUIButton =
 const createCreateUpdateUIButton =
     '<svg xmlns="http://www.w3.org/2000/svg" width="246" height="246" viewBox="0 0 246 246"><defs><linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox"><stop offset="0" stop-color="#e57709"/><stop offset="1" stop-color="#ff5400"/></linearGradient></defs><g id="Group_20" data-name="Group 20" transform="translate(-52 -57)"><circle id="Ellipse_12" data-name="Ellipse 12" cx="123" cy="123" r="123" transform="translate(52 57)" fill="url(#linear-gradient)"/><g id="Group_18" data-name="Group 18" transform="translate(-25 -201)"><path id="Path_15" data-name="Path 15" d="M1280.2,383.04l-20.16,33.28,16.32,9.76s14.72,1.76,21.76-8.32,1.44-22.72,0-23.04S1280.2,383.04,1280.2,383.04Z" transform="translate(-1040)" fill="#1d1d1d"/><path id="Path_16" data-name="Path 16" d="M1275.4,384c-.8,2.08-18.08,30.24-18.08,30.24h-60.8s-4.32-1.12-1.6-5.6,45.92-78.4,45.92-78.4,3.52-4.64,6.08,0,27.2,48,27.2,48S1276.2,381.92,1275.4,384Z" transform="translate(-1040)" fill="#1d1d1d"/><path id="Path_17" data-name="Path 17" d="M1221.48,357.36l-12.64,21.28-5.28-3.52s-2.24-1.76,0-4.64,9.28-14.72,9.28-14.72a2.96,2.96,0,0,1,4-.96C1219.24,356.24,1221.48,357.36,1221.48,357.36Z" transform="translate(-1040)" fill="#1d1d1d"/><path id="Path_18" data-name="Path 18" d="M1163.6,375.783h17.8s2.733,1.067,2.667,3.333-3.067,2.267-3.067,2.267h-17.4a2.5,2.5,0,0,1-2.4-2.667A2.857,2.857,0,0,1,1163.6,375.783Z" transform="translate(-1040)" fill="#1d1d1d"/><path id="Path_19" data-name="Path 19" d="M1163.6,375.783h17.8s2.733,1.067,2.667,3.333-3.067,2.267-3.067,2.267h-17.4a2.5,2.5,0,0,1-2.4-2.667A2.857,2.857,0,0,1,1163.6,375.783Z" transform="matrix(0.839, 0.545, -0.545, 0.839, -629.628, -603.586)" fill="#1d1d1d"/><path id="Path_20" data-name="Path 20" d="M1163.6,375.783h17.8s2.733,1.067,2.667,3.333-3.067,2.267-3.067,2.267h-17.4a2.5,2.5,0,0,1-2.4-2.667A2.857,2.857,0,0,1,1163.6,375.783Z" transform="matrix(0.545, 0.839, -0.839, 0.545, -157.521, -863.062)" fill="#1d1d1d"/></g><path id="Path_14" data-name="Path 14" d="M1250.92,418.96s.64-3.36,4.32-1.12,12.96,6.72,12.96,6.72a19.066,19.066,0,0,1,0,6.08c-.48,4.16-1.6,17.44-1.6,17.44s0,5.6-3.84,3.52-11.84-7.68-11.84-7.68-2.24.96-1.6-5.28S1250.92,418.96,1250.92,418.96Z" transform="translate(-1065 -201)" fill="#1d1d1d"/></g></svg>';
 
+final userId = firebaseAuth.currentUser!.uid;
+
 final firebaseAuth = FirebaseAuth.instance;
 final firebaseFirestore = FirebaseFirestore.instance;
 
@@ -323,4 +325,17 @@ initTitle1() => Row(
       ),
     )
   ],
+);
+
+buildCircularProgress() => Container(
+  alignment: Alignment.center,
+  child: const SizedBox(
+    height: 100.0,
+    width: 100.0,
+    child: CircularProgressIndicator(
+      valueColor: AlwaysStoppedAnimation(
+          colorPhilippineOrange
+      ),
+    ),
+  ),
 );

@@ -13,7 +13,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  late String _username, _email, _password, _rePassword;
+  late String _userName, _email, _password, _rePassword;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -45,7 +45,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               'user_id': userId,
               'user_image': userImage,
               'user_is_admin': userIsAdmin,
-              'user_name': _username,
+              'user_name': _userName,
             });
           }
         }
@@ -151,7 +151,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           }
                                           return null;
                                         },
-                                        onSaved: (input) => _username =
+                                        onSaved: (input) => _userName =
                                             input!.trim().toLowerCase(),
                                       ),
                                     ),
