@@ -251,7 +251,6 @@ initTextButton(final context, final firstText, final lastText, final width) =>
     );
 
 onFocusChange(final formKey) async {
-
   formKey.currentState.save();
   formKey.currentState.validate();
 }
@@ -276,11 +275,12 @@ initProgressDialog(final context, final message) async {
           color: Colors.white, fontSize: 19.0, fontWeight: FontWeight.w600));
 }
 
-buildFlutterToast(final msg, final color, {isLong = false}) => Fluttertoast.showToast(
-    msg: msg,
-    toastLength: isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT,
-    gravity: ToastGravity.SNACKBAR,
-    timeInSecForIosWeb: 1,
-    backgroundColor: colorChineseBlack,
-    textColor: color,
-    fontSize: 16.0);
+buildFlutterToast(final msg, final color, {isLong = false}) =>
+    Fluttertoast.showToast(
+        msg: msg,
+        toastLength: isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT,
+        gravity: ToastGravity.SNACKBAR,
+        timeInSecForIosWeb: 1,
+        backgroundColor: colorChineseBlack,
+        textColor: color,
+        fontSize: 16.0);
