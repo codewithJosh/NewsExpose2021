@@ -77,210 +77,219 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: <Widget>[
-            initBackground(),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20.0),
-              alignment: Alignment.center,
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: <Widget>[
-                      const SizedBox(
-                        height: 20.0,
-                      ),
-                      initLogo(),
-                      const SizedBox(
-                        height: 76.0,
-                      ),
-                      SizedBox(
-                        height: 550,
-                        child: Stack(
-                          children: <Widget>[
-                            BlendMask(
-                              blendMode: BlendMode.softLight,
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  color: colorChineseBlack,
+    return GestureDetector(
+      onTap: () {
+        final currentFocus = FocusScope.of(context);
+
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: Stack(
+            children: <Widget>[
+              initBackground(),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20.0),
+                alignment: Alignment.center,
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        initLogo(),
+                        const SizedBox(
+                          height: 76.0,
+                        ),
+                        SizedBox(
+                          height: 550,
+                          child: Stack(
+                            children: <Widget>[
+                              BlendMask(
+                                blendMode: BlendMode.softLight,
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    color: colorChineseBlack,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.all(15.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  initTitle('Sign Up'),
-                                  Focus(
-                                    onFocusChange: (_) =>
-                                        onFocusChange(_formKey),
-                                    child: TextFormField(
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(
-                                            RegExp('[a-z_.0-9@]')),
-                                        LengthLimitingTextInputFormatter(16),
-                                      ],
-                                      style:
-                                          const TextStyle(color: colorFulvous),
-                                      decoration:
-                                          initInputDecoration('Username'),
-                                      textInputAction: TextInputAction.next,
-                                      onFieldSubmitted: (_) =>
-                                          FocusScope.of(context).nextFocus(),
-                                      validator: (input) {
-                                        if (input!.isEmpty) {
-                                          return 'Username is required!';
-                                        } else if (!input.startsWith('@ne.')) {
-                                          return 'Must starts with @ne.';
-                                        } else if (input.length < 5) {
-                                          return 'Provide a valid Username';
-                                        }
-                                        return null;
-                                      },
-                                      onSaved: (input) => _username =
-                                          input!.trim().toLowerCase(),
+                              Container(
+                                margin: const EdgeInsets.all(15.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    initTitle('Sign Up'),
+                                    Focus(
+                                      onFocusChange: (_) =>
+                                          onFocusChange(_formKey),
+                                      child: TextFormField(
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(
+                                              RegExp('[a-z_.0-9@]')),
+                                          LengthLimitingTextInputFormatter(16),
+                                        ],
+                                        style:
+                                            const TextStyle(color: colorFulvous),
+                                        decoration:
+                                            initInputDecoration('Username'),
+                                        textInputAction: TextInputAction.next,
+                                        onFieldSubmitted: (_) =>
+                                            FocusScope.of(context).nextFocus(),
+                                        validator: (input) {
+                                          if (input!.isEmpty) {
+                                            return 'Username is required!';
+                                          } else if (!input.startsWith('@ne.')) {
+                                            return 'Must starts with @ne.';
+                                          } else if (input.length < 5) {
+                                            return 'Provide a valid Username';
+                                          }
+                                          return null;
+                                        },
+                                        onSaved: (input) => _username =
+                                            input!.trim().toLowerCase(),
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    height: 20.0,
-                                  ),
-                                  Focus(
-                                    onFocusChange: (_) =>
-                                        onFocusChange(_formKey),
-                                    child: TextFormField(
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(
-                                            RegExp('[a-z_.0-9@]')),
-                                        LengthLimitingTextInputFormatter(25),
-                                      ],
-                                      style:
-                                          const TextStyle(color: colorFulvous),
-                                      decoration: initInputDecoration('Email'),
-                                      textInputAction: TextInputAction.next,
-                                      onFieldSubmitted: (_) =>
-                                          FocusScope.of(context).nextFocus(),
-                                      validator: (input) {
-                                        if (input!.isEmpty) {
-                                          return 'Email is required!';
-                                        } else if (!input
-                                            .endsWith('@ne.xpose')) {
-                                          return 'Must end with @ne.xpose';
-                                        } else if (input.length < 10) {
-                                          return 'Provide a valid Email Address';
-                                        }
-                                        return null;
-                                      },
-                                      onSaved: (input) =>
-                                          _email = input!.trim().toLowerCase(),
+                                    const SizedBox(
+                                      height: 20.0,
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    height: 20.0,
-                                  ),
-                                  Focus(
-                                    onFocusChange: (_) =>
-                                        onFocusChange(_formKey),
-                                    child: TextFormField(
-                                      style:
-                                          const TextStyle(color: colorFulvous),
-                                      decoration:
-                                          initInputDecoration('Password'),
-                                      obscureText: true,
-                                      textInputAction: TextInputAction.next,
-                                      onFieldSubmitted: (_) =>
-                                          FocusScope.of(context).nextFocus(),
-                                      validator: (input) {
-                                        if (input!.length < 6) {
-                                          return 'Must be at least 6 characters';
-                                        }
-                                        return null;
-                                      },
-                                      onSaved: (input) =>
-                                          _password = input!.trim(),
+                                    Focus(
+                                      onFocusChange: (_) =>
+                                          onFocusChange(_formKey),
+                                      child: TextFormField(
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(
+                                              RegExp('[a-z_.0-9@]')),
+                                          LengthLimitingTextInputFormatter(25),
+                                        ],
+                                        style:
+                                            const TextStyle(color: colorFulvous),
+                                        decoration: initInputDecoration('Email'),
+                                        textInputAction: TextInputAction.next,
+                                        onFieldSubmitted: (_) =>
+                                            FocusScope.of(context).nextFocus(),
+                                        validator: (input) {
+                                          if (input!.isEmpty) {
+                                            return 'Email is required!';
+                                          } else if (!input
+                                              .endsWith('@ne.xpose')) {
+                                            return 'Must end with @ne.xpose';
+                                          } else if (input.length < 10) {
+                                            return 'Provide a valid Email Address';
+                                          }
+                                          return null;
+                                        },
+                                        onSaved: (input) =>
+                                            _email = input!.trim().toLowerCase(),
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(
-                                    height: 20.0,
-                                  ),
-                                  Focus(
-                                    onFocusChange: (_) =>
-                                        onFocusChange(_formKey),
-                                    child: TextFormField(
-                                      style:
-                                          const TextStyle(color: colorFulvous),
-                                      decoration: initInputDecoration(
-                                          'Re-Enter Password'),
-                                      obscureText: true,
-                                      textInputAction: TextInputAction.done,
-                                      onFieldSubmitted: (_) =>
-                                          FocusScope.of(context).unfocus(),
-                                      validator: (input) {
-                                        if (_password != _rePassword) {
-                                          return 'Password doesn\'t match';
-                                        }
-                                        return null;
-                                      },
-                                      onSaved: (input) =>
-                                          _rePassword = input!.trim(),
+                                    const SizedBox(
+                                      height: 20.0,
                                     ),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 20.0),
-                                    height: 43.0,
-                                    child: Stack(
-                                      children: <Widget>[
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(22.0),
-                                            gradient: linearButton,
-                                          ),
-                                        ),
-                                        Center(
-                                          child: SizedBox(
-                                            width: width,
-                                            child:
-                                                FloatingActionButton.extended(
-                                              onPressed: () =>
-                                                  _onRegister(context),
-                                              heroTag: null,
-                                              splashColor: colorKUCrimson,
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              elevation: 0.0,
-                                              label: initLabel('SIGN UP'),
+                                    Focus(
+                                      onFocusChange: (_) =>
+                                          onFocusChange(_formKey),
+                                      child: TextFormField(
+                                        style:
+                                            const TextStyle(color: colorFulvous),
+                                        decoration:
+                                            initInputDecoration('Password'),
+                                        obscureText: true,
+                                        textInputAction: TextInputAction.next,
+                                        onFieldSubmitted: (_) =>
+                                            FocusScope.of(context).nextFocus(),
+                                        validator: (input) {
+                                          if (input!.length < 6) {
+                                            return 'Must be at least 6 characters';
+                                          }
+                                          return null;
+                                        },
+                                        onSaved: (input) =>
+                                            _password = input!.trim(),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 20.0,
+                                    ),
+                                    Focus(
+                                      onFocusChange: (_) =>
+                                          onFocusChange(_formKey),
+                                      child: TextFormField(
+                                        style:
+                                            const TextStyle(color: colorFulvous),
+                                        decoration: initInputDecoration(
+                                            'Re-Enter Password'),
+                                        obscureText: true,
+                                        textInputAction: TextInputAction.done,
+                                        onFieldSubmitted: (_) =>
+                                            FocusScope.of(context).unfocus(),
+                                        validator: (input) {
+                                          if (_password != _rePassword) {
+                                            return 'Password doesn\'t match';
+                                          }
+                                          return null;
+                                        },
+                                        onSaved: (input) =>
+                                            _rePassword = input!.trim(),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 20.0),
+                                      height: 43.0,
+                                      child: Stack(
+                                        children: <Widget>[
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(22.0),
+                                              gradient: linearButton,
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                          Center(
+                                            child: SizedBox(
+                                              width: width,
+                                              child:
+                                                  FloatingActionButton.extended(
+                                                onPressed: () =>
+                                                    _onRegister(context),
+                                                heroTag: null,
+                                                splashColor: colorKUCrimson,
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                elevation: 0.0,
+                                                label: initLabel('SIGN UP'),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  initTextButton(
-                                      context,
-                                      'Already have an account?',
-                                      'Sign In',
-                                      225.0),
-                                ],
+                                    initTextButton(
+                                        context,
+                                        'Already have an account?',
+                                        'Sign In',
+                                        225.0),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 20.0,
-                      ),
-                    ],
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
