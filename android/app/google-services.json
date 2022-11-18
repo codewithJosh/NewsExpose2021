@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "344220961114",
+    "project_id": "news-expose-2k21",
+    "storage_bucket": "news-expose-2k21.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344220961114:android:09cf928cbe20ccd79f0b63",
+        "android_client_info": {
+          "package_name": "com.codewithjosh.news_expose_2k21"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "344220961114-v12g1kfmnlq1tohdn09c0v82e4s31ecu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANrQ-xyf8dZLo7UQEeOp2LwZGWA_bXKbU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "344220961114-v12g1kfmnlq1tohdn09c0v82e4s31ecu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
