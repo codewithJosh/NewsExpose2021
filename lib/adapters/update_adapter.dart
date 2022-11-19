@@ -90,7 +90,21 @@ class _UpdateState extends State<Update> {
     ),
   );
 
-  _initBody() => Image.network(_updateImage);
+  _initBody() => Column(
+      children: <Widget>[
+
+        _updateContent.isNotEmpty
+            ? Container(
+            alignment: Alignment.topLeft,
+            child: initTitle2(_updateContent))
+            : Container(),
+
+        const SizedBox(height: 10.0,),
+
+        Image.network(_updateImage),
+
+      ]
+  );
 
   _initFoot() => Padding(
     padding: const EdgeInsets.symmetric(vertical: 18.0),
@@ -141,15 +155,18 @@ class _UpdateState extends State<Update> {
           ],
         ),
 
-
       ],
     ),
   );
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    _isSeen = _seen[userId] == true;
+  }
 
-    _isSeen = (_seen[userId] == true);
+  @override
+  Widget build(BuildContext context) {
 
     return Container(
       margin: const EdgeInsets.all(18.0),
@@ -166,13 +183,6 @@ class _UpdateState extends State<Update> {
             padding: const EdgeInsets.symmetric(horizontal: 18.0),
             child: Column(
               children: <Widget>[
-
-                _updateContent.isNotEmpty
-                    ? Container(
-                    alignment: Alignment.topLeft,
-                    child: initTitle2(_updateContent))
-                    : Container(),
-                const SizedBox(height: 10.0,),
 
                 _initBody(),
 

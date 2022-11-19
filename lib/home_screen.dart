@@ -20,7 +20,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late File _uri;
   bool _isLoading = false;
-  int _updateCount = 0;
   List<Update> _updates = [];
 
   _initAppBar() => AppBar(
@@ -36,12 +35,15 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Container(
-                  margin: const EdgeInsets.only(left: 20.0),
-                  child: SvgPicture.string(
-                    createLogoUIButton,
-                    allowDrawingOutsideViewBox: true,
-                    fit: BoxFit.fill,
+                GestureDetector(
+                  onTap: () => onLoadUpdates(),
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 20.0),
+                    child: SvgPicture.string(
+                      createLogoUIButton,
+                      allowDrawingOutsideViewBox: true,
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
                 initTitle1(),
@@ -129,7 +131,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     setState(() {
       _isLoading = false;
-      _updateCount = querySnapshot.size;
       _updates = querySnapshot.docs.map((documentSnapshot) => Update.fromDocument(documentSnapshot)).toList();
     });
   }
