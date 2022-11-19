@@ -1,4 +1,4 @@
-import 'package:adobe_xd/blend_mask.dart';
+import 'package:adobe_xd/adobe_xd.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:news_expose_2k21/functions.dart';
