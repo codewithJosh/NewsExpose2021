@@ -1,11 +1,13 @@
 import 'package:adobe_xd/adobe_xd.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_expose_2k21/login_screen.dart';
 import 'package:news_expose_2k21/register_screen.dart';
+import 'package:path/path.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 
 const colorChineseBlack = Color(0xff151515);
@@ -57,13 +59,17 @@ const createCameraUIButton =
     '<svg xmlns="http://www.w3.org/2000/svg"  width="30" height="26" viewBox="0 0 30 26"><defs><linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox"><stop offset="0" stop-color="#e57709"/><stop offset="1" stop-color="#ff5400"/></linearGradient></defs><g id="Group_20" data-name="Group 20" transform="translate(-1 -1)"><g id="Group_19" data-name="Group 19"><path id="Path_11" data-name="Path 11" d="M28,8.8H23.7L21,6a3.212,3.212,0,0,0-2.2-1H13.2A3.212,3.212,0,0,0,11,6L8.3,8.8H4a2.946,2.946,0,0,0-3,3V24a2.946,2.946,0,0,0,3,3H28a2.946,2.946,0,0,0,3-3V11.8A3.009,3.009,0,0,0,28,8.8Zm-12,15a6.7,6.7,0,1,1,6.7-6.7A6.7,6.7,0,0,1,16,23.8Z" fill="url(#linear-gradient)"/><circle id="Ellipse_11" data-name="Ellipse 11" cx="4.7" cy="4.7" r="4.7" transform="translate(11.3 12.4)" fill="url(#linear-gradient)"/><path id="Path_12" data-name="Path 12" d="M2,5.6H3.6V7.2a.945.945,0,0,0,1,1,.945.945,0,0,0,1-1V5.6H7.2a.945.945,0,0,0,1-1,.945.945,0,0,0-1-1H5.6V2a.945.945,0,0,0-1-1,.945.945,0,0,0-1,1V3.6H2a.945.945,0,0,0-1,1A.945.945,0,0,0,2,5.6Z" fill="url(#linear-gradient)"/></g></g></svg>';
 const createGalleryUIButton =
     '<svg xmlns="http://www.w3.org/2000/svg"  width="979.922" height="979.491" viewBox="0 0 979.922 979.491"><defs><linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox"><stop offset="0" stop-color="#e57709"/><stop offset="1" stop-color="#ff5400"/></linearGradient></defs><g id="_svg_gallery_upload_button" transform="translate(0.05 979.619)"><path id="Path_7" data-name="Path 7" d="M138.1-978.9c-4.1.5-12.1,2-17.8,3.4C56.7-960.2,8.4-905.5,1-840.5c-1.4,12.4-1.4,688.6,0,701C9.3-66.7,67.7-8.8,140.6-1c8,.8,74.6,1,252.9.8l242-.3,4.2-2.3c6.6-3.5,11-7.9,14-14,2.3-4.6,2.8-7,2.8-12.8-.1-12-6.4-21.7-17.4-26.8l-4.6-2.1-247-.5-247-.5-7.6-2.2c-37.6-10.7-64.3-38.9-72-75.8-1.8-8.7-1.9-21-1.9-352.5s.1-343.8,1.9-352.5a95.958,95.958,0,0,1,28.2-51,94.787,94.787,0,0,1,48.4-25.6c8.7-1.8,21.4-1.9,352.5-1.9,331.5,0,343.8.1,352.5,1.9a95.958,95.958,0,0,1,51,28.2c12.4,13,19.7,25.7,24.8,43.9l2.2,7.5.5,246.1.5,246,3,5.9c11,21.5,41.8,20.8,52.6-1.1l2.4-4.9.3-240.5c.2-177.3,0-243.4-.8-251.4-4-37.3-20.2-70.2-47.7-96.6-21.9-21.1-46.1-33.9-77.8-41.2l-10-2.3-349-.1C302.5-979.7,142.2-979.4,138.1-978.9Z" fill="url(#linear-gradient)"/><path id="Path_8" data-name="Path 8" d="M285.5-744c-12.4,3.3-21,8.5-31,18.5C240-711.1,234-696.8,234-676.4c0,27.7,14.7,51.2,39.5,63,10.3,4.9,18.4,6.7,30,6.7,11.9,0,19.9-1.8,31-7.2,14.6-7.1,25-17.7,32.1-32.6,9.6-20,9-42.9-1.4-63-5.6-10.7-19.1-23.9-30.2-29.2a93.954,93.954,0,0,0-15.1-5.7C310.9-746.6,294.5-746.4,285.5-744Z" fill="url(#linear-gradient)"/><path id="Path_9" data-name="Path 9" d="M543.5-557.3c-60.4,78-110.1,142.1-110.4,142.5-.4.5-14-21.7-30.1-49.2-16.2-27.5-29.8-49.8-30.2-49.7-.9.3-233.2,234.8-233.6,235.8-.2.5,85.5.9,191.4.9H522.4l7.6-7.8c18.4-19.2,39.6-30,65.3-33.2,4.5-.5,21.8-1,38.4-1H664v-28.3c.1-31.9,1-44.6,4-56.2,2.5-9.5,9.1-23.8,15-32.6,8.5-12.6,24.6-26.8,38-33.5,2.8-1.4,5-3,5-3.6s-2-8-4.5-16.4c-2.5-8.3-4.5-15.8-4.5-16.6,0-1.4-62.7-191.8-63.4-192.5C653.4-698.9,603.9-635.2,543.5-557.3Z" fill="url(#linear-gradient)"/><path id="Path_10" data-name="Path 10" d="M762.5-420.7c-6.5,2.2-9.9,4.3-13.9,8.7-7.5,8.4-7,2.5-7.6,90.5l-.5,79L661-242l-79.5.5-4.6,2.7a34.092,34.092,0,0,0-13,14.2c-2.3,5.1-2.5,15.5-.3,21.9,2,6,7.9,12.6,14,15.7l4.9,2.5,79.3.3,79.2.2V-27.5l2.8,6C748.9-10.8,758.4-4.7,770-4.7c11.8,0,22.1-6.7,27.2-17.8l2.3-5,.3-78.2.3-78.3,79.2-.2c79.1-.3,79.2-.3,83.2-2.5,5.1-2.7,11.9-9.9,14.1-15,2.6-5.8,2.4-17.6-.3-23.4a33.107,33.107,0,0,0-13.8-14.4c-3.9-1.9-6.7-2-83.2-2.3l-79.2-.2-.3-78.3-.3-78.2-2.6-5.6c-3.2-6.7-8.7-12.5-14.5-15C776.8-421.6,767.6-422.3,762.5-420.7Z" fill="url(#linear-gradient)"/></g></svg>';
+const createUploadUIButton =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="329.4" height="400" viewBox="0 0 329.4 400"><defs><linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox"><stop offset="0" stop-color="#e57709"/><stop offset="1" stop-color="#ff5400"/></linearGradient></defs><path id="Path_8" data-name="Path 8" d="M185.4,361.9H326.6V220.7h94.1L256,56,91.3,220.7h94.1Zm-94.1,47H420.7V456H91.3Z" transform="translate(-91.3 -56)" fill="url(#linear-gradient)"/></svg>';
 
 final userId = firebaseAuth.currentUser!.uid;
 
 final firebaseAuth = FirebaseAuth.instance;
 final firebaseFirestore = FirebaseFirestore.instance;
+final firebaseStorage = FirebaseStorage.instance;
 
 final users = firebaseFirestore.collection('Users');
+final updates = firebaseFirestore.collection('Updates');
 
 initMain(final context) {
   final width = MediaQuery.of(context).size.width;
@@ -339,3 +345,5 @@ buildCircularProgress() => Container(
         ),
       ),
     );
+
+extension(final path, [int level = 1]) => context.extension(path, level);
