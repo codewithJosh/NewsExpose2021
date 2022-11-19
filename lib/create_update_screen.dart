@@ -4,6 +4,7 @@ import 'package:adobe_xd/adobe_xd.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:news_expose_2k21/functions.dart';
 
 class CreateUpdateScreen extends StatefulWidget {
@@ -71,6 +72,51 @@ class _CreateUpdateScreenState extends State<CreateUpdateScreen> {
     );
   }
 
+  _buildGetImage(final context) => showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        decoration: const BoxDecoration(
+          gradient: linearAppBar,
+        ),
+        height: 120,
+        child: Column(
+          children: <Widget>[
+            _initListTile(context, 'Capture Image with Camera'),
+            _initListTile(context, 'Select Image from Gallery')
+          ],
+        ),
+      ));
+
+  _initListTile(final context, final text) => ListTile(
+    leading: SizedBox(
+      width: 30.0,
+      height: 25.0,
+      child: SvgPicture.string(
+        text.contains('Capture Image with Camera')
+            ? createCameraUIButton
+            : createGalleryUIButton,
+        allowDrawingOutsideViewBox: true,
+        fit: BoxFit.fill,
+      ),
+    ),
+    title: Text(
+      text,
+      style: const TextStyle(
+        color: Colors.white,
+      ),
+    ),
+    onTap: () async {
+      final image = await ImagePicker().pickImage(
+          source: text.contains('Capture Image with Camera')
+              ? ImageSource.camera
+              : ImageSource.gallery);
+      Navigator.of(context).pop();
+      setState(() {
+        _uri = File(image!.path);
+      });
+    },
+  );
+
   @override
   void initState() {
     super.initState();
@@ -117,13 +163,16 @@ class _CreateUpdateScreenState extends State<CreateUpdateScreen> {
 
                         Expanded(
                           flex: 4,
-                          child: SizedBox(
-                            height: height,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(6),
-                              child: Image.file(
-                                _uri,
-                                fit: BoxFit.cover,
+                          child: GestureDetector(
+                            onTap: () => _buildGetImage(context),
+                            child: SizedBox(
+                              height: height,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(6),
+                                child: Image.file(
+                                  _uri,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
