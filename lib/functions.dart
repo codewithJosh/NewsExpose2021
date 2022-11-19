@@ -1,12 +1,14 @@
 import 'package:adobe_xd/adobe_xd.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_expose_2k21/login_screen.dart';
 import 'package:news_expose_2k21/register_screen.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
+import 'package:path/path.dart';
 
 const colorChineseBlack = Color(0xff151515);
 const colorFulvous = Color(0xffE57608);
@@ -64,8 +66,10 @@ final userId = firebaseAuth.currentUser!.uid;
 
 final firebaseAuth = FirebaseAuth.instance;
 final firebaseFirestore = FirebaseFirestore.instance;
+final firebaseStorage = FirebaseStorage.instance;
 
 final users = firebaseFirestore.collection('Users');
+final updates = firebaseFirestore.collection('Updates');
 
 initMain(final context) {
   final width = MediaQuery.of(context).size.width;
@@ -341,3 +345,5 @@ buildCircularProgress() => Container(
         ),
       ),
     );
+
+extension(final path, [int level = 1]) => context.extension(path, level);

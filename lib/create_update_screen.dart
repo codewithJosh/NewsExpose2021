@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:adobe_xd/adobe_xd.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:news_expose_2k21/functions.dart';
+import 'package:random_string/random_string.dart';
 
 class CreateUpdateScreen extends StatefulWidget {
   final File uri;
@@ -18,7 +20,10 @@ class CreateUpdateScreen extends StatefulWidget {
 
 class _CreateUpdateScreenState extends State<CreateUpdateScreen> {
 
-  late File _uri;
+  File? _uri;
+  late String _content;
+  bool _isUploading = false;
+  int _pendingRequests = 0;
 
   _initAppBar(final context) {
 
@@ -54,13 +59,16 @@ class _CreateUpdateScreenState extends State<CreateUpdateScreen> {
               Container(
                 alignment: Alignment.centerRight,
                 margin: const EdgeInsets.only(right: 20.0),
-                child: SizedBox(
-                  height: 20.0,
-                  width: 18.0,
-                  child: SvgPicture.string(
-                    createUploadUIButton,
-                    allowDrawingOutsideViewBox: true,
-                    fit: BoxFit.fill,
+                child: GestureDetector(
+                  onTap: () => _onCreateUpdate(context),
+                  child: SizedBox(
+                    height: 20.0,
+                    width: 18.0,
+                    child: SvgPicture.string(
+                      createUploadUIButton,
+                      allowDrawingOutsideViewBox: true,
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
               )
@@ -117,6 +125,57 @@ class _CreateUpdateScreenState extends State<CreateUpdateScreen> {
     },
   );
 
+  _onCreateUpdate(final context) async {
+
+    if (_uri != null) {
+
+      setState(() {
+        _isUploading = true;
+        _pendingRequests++;
+      });
+
+      buildFlutterToast('Currently Uploading Please Wait', colorFulvous, isLong: true);
+
+      if (_pendingRequests == 1) {
+
+        final ref = firebaseStorage
+            .ref()
+            .child('Updates')
+            .child(randomAlphaNumeric(9) + extension(_uri!.path)
+        );
+
+        final uploadTask = ref.putFile(_uri!);
+
+        final updateImage = await (await uploadTask.whenComplete(() {}))
+            .ref
+            .getDownloadURL();
+
+        if (updateImage.isNotEmpty) {
+
+          final updateId = updates.doc().id;
+
+          addUpdates() async {
+            final documentSnapshot = await updates.doc(updateId).get();
+
+            if(!documentSnapshot.exists) {
+
+              updates.doc(updateId).set({
+                'update_id': updateId,
+                'update_image': updateImage,
+                'update_content': _content,
+                'update_timestamp': Timestamp.now(),
+                'user_id': userId,
+                'Seen': {},
+              });
+            }
+          }
+
+          addUpdates().then((value) => Navigator.pop(context));
+        }
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -127,91 +186,107 @@ class _CreateUpdateScreenState extends State<CreateUpdateScreen> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
 
-    return Scaffold(
+    return GestureDetector(
+      onTap: () {
+        final currentFocus = FocusScope.of(context);
 
-      appBar: _initAppBar(context),
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
+      child: Scaffold(
 
-      body: Stack(
-        children: <Widget>[
+        appBar: _initAppBar(context),
 
-          Container(
-            decoration: const BoxDecoration(
-              color: colorChineseBlack,
-            ),
-          ),
+        body: Stack(
+          children: <Widget>[
 
-          Center(
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 15.0),
-              height: height/2,
-              child: Stack(
-                children: <Widget>[
-
-                  BlendMask(
-                    blendMode: BlendMode.softLight,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: colorChineseBlack,
-                      ),
-                    ),
-                  ),
-
-                  Container(
-                    margin: const EdgeInsets.all(15.0),
-                    child: Column(
-                      children: <Widget>[
-
-                        Expanded(
-                          flex: 4,
-                          child: GestureDetector(
-                            onTap: () => _buildGetImage(context),
-                            child: SizedBox(
-                              height: height,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(6),
-                                child: Image.file(
-                                  _uri,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 15,),
-
-                        Expanded(
-                          flex: 1,
-                          child: Center(
-                            child: TextField(
-                              minLines: 1,
-                              maxLines: 5,
-                              style: const TextStyle(color: colorFulvous),
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Subject',
-                                hintStyle: TextStyle(
-                                  color: Colors.white.withOpacity(0.5),
-                                  fontStyle: FontStyle.italic,
-                                ),
-                                filled: true,
-                                fillColor: colorChineseBlack.withOpacity(0.75),
-                                contentPadding: const EdgeInsets.all(8.0),
-                                focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: colorFulvous),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+            Container(
+              decoration: const BoxDecoration(
+                color: colorChineseBlack,
               ),
             ),
-          ),
-        ],
+
+            _isUploading
+            ? buildCircularProgress()
+            : Center(
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 15.0),
+                height: height/2,
+                child: Stack(
+                  children: <Widget>[
+
+                    BlendMask(
+                      blendMode: BlendMode.softLight,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: colorChineseBlack,
+                        ),
+                      ),
+                    ),
+
+                    Container(
+                      margin: const EdgeInsets.all(15.0),
+                      child: Column(
+                        children: <Widget>[
+
+                          Expanded(
+                            flex: 4,
+                            child: GestureDetector(
+                              onTap: () => _buildGetImage(context),
+                              child: SizedBox(
+                                height: height,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(6),
+                                  child: Image.file(
+                                    _uri!,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 15,),
+
+                          Expanded(
+                            flex: 1,
+                            child: Center(
+                              child: TextField(
+                                minLines: 1,
+                                maxLines: 5,
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(1024),
+                                ],
+                                style: const TextStyle(color: colorFulvous),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Subject',
+                                  hintStyle: TextStyle(
+                                    color: Colors.white.withOpacity(0.5),
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                  filled: true,
+                                  fillColor: colorChineseBlack.withOpacity(0.75),
+                                  contentPadding: const EdgeInsets.all(8.0),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderSide: BorderSide(color: colorFulvous),
+                                  ),
+                                ),
+                                onChanged: (input) => _content = input.trim(),
+                                textInputAction: TextInputAction.newline,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
