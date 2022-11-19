@@ -63,7 +63,11 @@ dependencies:
 
   # add dependency on Flutter Image Picker
   image_picker: ^0.8.6
+
+  # add dependency on Google Firebase Cloud Storage
   firebase_storage: ^11.0.6
+
+  # add dependency on D. Douglas Random String
   random_string: ^2.3.1
 
 dev_dependencies:
