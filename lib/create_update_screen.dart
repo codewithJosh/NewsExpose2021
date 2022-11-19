@@ -19,8 +19,8 @@ class CreateUpdateScreen extends StatefulWidget {
 }
 
 class _CreateUpdateScreenState extends State<CreateUpdateScreen> {
-  File? _uri;
-  late String _content;
+  late File _uri = widget.uri;
+  late String _updateContent;
   bool _isUploading = false;
   int _pendingRequests = 0;
 
@@ -118,54 +118,46 @@ class _CreateUpdateScreenState extends State<CreateUpdateScreen> {
       );
 
   _onCreateUpdate(final context) async {
-    if (_uri != null) {
-      setState(() {
-        _isUploading = true;
-        _pendingRequests++;
-      });
+    setState(() {
+      _isUploading = true;
+      _pendingRequests++;
+    });
 
-      buildFlutterToast('Currently Uploading Please Wait', colorFulvous,
-          isLong: true);
+    buildFlutterToast('Currently Uploading Please Wait', colorFulvous,
+        isLong: true);
 
-      if (_pendingRequests == 1) {
-        final ref = firebaseStorage
-            .ref()
-            .child('Updates')
-            .child(randomAlphaNumeric(9) + extension(_uri!.path));
+    if (_pendingRequests == 1) {
+      final ref = firebaseStorage
+          .ref()
+          .child('Updates')
+          .child(randomAlphaNumeric(9) + extension(_uri.path));
 
-        final uploadTask = ref.putFile(_uri!);
+      final uploadTask = ref.putFile(_uri);
 
-        final updateImage =
-            await (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
+      final updateImage =
+      await (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
 
-        if (updateImage.isNotEmpty) {
-          final updateId = updates.doc().id;
+      if (updateImage.isNotEmpty) {
+        final updateId = updatesRef.doc().id;
 
-          addUpdates() async {
-            final documentSnapshot = await updates.doc(updateId).get();
+        addUpdates() async {
+          final documentSnapshot = await updatesRef.doc(updateId).get();
 
-            if (!documentSnapshot.exists) {
-              updates.doc(updateId).set({
-                'update_id': updateId,
-                'update_image': updateImage,
-                'update_content': _content,
-                'update_timestamp': Timestamp.now(),
-                'user_id': userId,
-                'Seen': {},
-              });
-            }
+          if (!documentSnapshot.exists) {
+            updatesRef.doc(updateId).set({
+              'update_id': updateId,
+              'update_image': updateImage,
+              'update_content': _updateContent,
+              'update_timestamp': Timestamp.now(),
+              'user_id': userId,
+              'Seen': {},
+            });
           }
-
-          addUpdates().then((value) => Navigator.pop(context));
         }
+
+        addUpdates().then((value) => Navigator.pop(context));
       }
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _uri = widget.uri;
   }
 
   @override
@@ -218,7 +210,7 @@ class _CreateUpdateScreenState extends State<CreateUpdateScreen> {
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(6),
                                         child: Image.file(
-                                          _uri!,
+                                          _uri,
                                           fit: BoxFit.cover,
                                         ),
                                       ),
@@ -257,7 +249,7 @@ class _CreateUpdateScreenState extends State<CreateUpdateScreen> {
                                         ),
                                       ),
                                       onChanged: (input) =>
-                                          _content = input.trim(),
+                                          _updateContent = input.trim(),
                                       textInputAction: TextInputAction.newline,
                                     ),
                                   ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:news_expose_2k21/adapters/update_adapter.dart';
 import 'package:news_expose_2k21/create_update_screen.dart';
 import 'package:news_expose_2k21/functions.dart';
 
@@ -18,6 +19,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late File _uri;
+  bool _isLoading = false;
+  int _updateCount = 0;
+  List<Update> _updates = [];
 
   _initAppBar() => AppBar(
         systemOverlayStyle: SystemUiOverlayStyle.light,
@@ -107,6 +111,35 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.of(context).push(route);
   }
 
+  loadUpdates() => _isLoading
+    ? buildCircularProgress()
+    : SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Column(
+        children: _updates,
+      ),
+    );
+
+  onLoadUpdates() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final querySnapshot = await updatesRef.get();
+
+    setState(() {
+      _isLoading = false;
+      _updateCount = querySnapshot.size;
+      _updates = querySnapshot.docs.map((documentSnapshot) => Update.fromDocument(documentSnapshot)).toList();
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    onLoadUpdates();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -121,8 +154,11 @@ class _HomeScreenState extends State<HomeScreen> {
           SafeArea(
             child: Stack(
               children: <Widget>[
+
+                loadUpdates(),
+
                 FutureBuilder(
-                    future: users.doc(userId).get(),
+                    future: usersRef.doc(userId).get(),
                     builder: (context, dataSnapshot) {
                       if (!dataSnapshot.hasData) {
                         return buildCircularProgress();

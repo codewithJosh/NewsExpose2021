@@ -17,8 +17,7 @@ class User {
     this.userName,
   });
 
-  factory User.fromDocument(final documentSnapshot) {
-    return User(
+  factory User.fromDocument(final documentSnapshot) => User(
       buildNumber: documentSnapshot['build_number'],
       userBio: documentSnapshot['user_bio'],
       userEmail: documentSnapshot['user_email'],
@@ -27,5 +26,4 @@ class User {
       userIsAdmin: documentSnapshot['user_is_admin'],
       userName: documentSnapshot['user_name'],
     );
-  }
 }
