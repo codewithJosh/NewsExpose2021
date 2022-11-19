@@ -19,21 +19,18 @@ class CreateUpdateScreen extends StatefulWidget {
 }
 
 class _CreateUpdateScreenState extends State<CreateUpdateScreen> {
-
   File? _uri;
   late String _content;
   bool _isUploading = false;
   int _pendingRequests = 0;
 
   _initAppBar(final context) {
-
     final width = MediaQuery.of(context).size.width;
 
     return AppBar(
       systemOverlayStyle: SystemUiOverlayStyle.light,
       backgroundColor: colorChineseBlack,
       toolbarHeight: 48.0,
-
       flexibleSpace: SafeArea(
         child: Container(
           width: width,
@@ -42,20 +39,16 @@ class _CreateUpdateScreenState extends State<CreateUpdateScreen> {
           ),
           child: Stack(
             children: <Widget>[
-
               Container(
                 alignment: Alignment.center,
                 margin: const EdgeInsets.only(left: 20.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-
                     initTitle1(),
-
                   ],
                 ),
               ),
-
               Container(
                 alignment: Alignment.centerRight,
                 margin: const EdgeInsets.only(right: 20.0),
@@ -72,7 +65,6 @@ class _CreateUpdateScreenState extends State<CreateUpdateScreen> {
                   ),
                 ),
               )
-
             ],
           ),
         ),
@@ -83,82 +75,76 @@ class _CreateUpdateScreenState extends State<CreateUpdateScreen> {
   _buildGetImage(final context) => showModalBottomSheet(
       context: context,
       builder: (context) => Container(
-        decoration: const BoxDecoration(
-          gradient: linearAppBar,
-        ),
-        height: 120,
-        child: Column(
-          children: <Widget>[
-            _initListTile(context, 'Capture Image with Camera'),
-            _initListTile(context, 'Select Image from Gallery')
-          ],
-        ),
-      ));
+            decoration: const BoxDecoration(
+              gradient: linearAppBar,
+            ),
+            height: 120,
+            child: Column(
+              children: <Widget>[
+                _initListTile(context, 'Capture Image with Camera'),
+                _initListTile(context, 'Select Image from Gallery')
+              ],
+            ),
+          ));
 
   _initListTile(final context, final text) => ListTile(
-    leading: SizedBox(
-      width: 30.0,
-      height: 25.0,
-      child: SvgPicture.string(
-        text.contains('Capture Image with Camera')
-            ? createCameraUIButton
-            : createGalleryUIButton,
-        allowDrawingOutsideViewBox: true,
-        fit: BoxFit.fill,
-      ),
-    ),
-    title: Text(
-      text,
-      style: const TextStyle(
-        color: Colors.white,
-      ),
-    ),
-    onTap: () async {
-      final image = await ImagePicker().pickImage(
-          source: text.contains('Capture Image with Camera')
-              ? ImageSource.camera
-              : ImageSource.gallery);
-      Navigator.of(context).pop();
-      setState(() {
-        _uri = File(image!.path);
-      });
-    },
-  );
+        leading: SizedBox(
+          width: 30.0,
+          height: 25.0,
+          child: SvgPicture.string(
+            text.contains('Capture Image with Camera')
+                ? createCameraUIButton
+                : createGalleryUIButton,
+            allowDrawingOutsideViewBox: true,
+            fit: BoxFit.fill,
+          ),
+        ),
+        title: Text(
+          text,
+          style: const TextStyle(
+            color: Colors.white,
+          ),
+        ),
+        onTap: () async {
+          final image = await ImagePicker().pickImage(
+              source: text.contains('Capture Image with Camera')
+                  ? ImageSource.camera
+                  : ImageSource.gallery);
+          Navigator.of(context).pop();
+          setState(() {
+            _uri = File(image!.path);
+          });
+        },
+      );
 
   _onCreateUpdate(final context) async {
-
     if (_uri != null) {
-
       setState(() {
         _isUploading = true;
         _pendingRequests++;
       });
 
-      buildFlutterToast('Currently Uploading Please Wait', colorFulvous, isLong: true);
+      buildFlutterToast('Currently Uploading Please Wait', colorFulvous,
+          isLong: true);
 
       if (_pendingRequests == 1) {
-
         final ref = firebaseStorage
             .ref()
             .child('Updates')
-            .child(randomAlphaNumeric(9) + extension(_uri!.path)
-        );
+            .child(randomAlphaNumeric(9) + extension(_uri!.path));
 
         final uploadTask = ref.putFile(_uri!);
 
-        final updateImage = await (await uploadTask.whenComplete(() {}))
-            .ref
-            .getDownloadURL();
+        final updateImage =
+            await (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
 
         if (updateImage.isNotEmpty) {
-
           final updateId = updates.doc().id;
 
           addUpdates() async {
             final documentSnapshot = await updates.doc(updateId).get();
 
-            if(!documentSnapshot.exists) {
-
+            if (!documentSnapshot.exists) {
               updates.doc(updateId).set({
                 'update_id': updateId,
                 'update_image': updateImage,
@@ -195,96 +181,94 @@ class _CreateUpdateScreenState extends State<CreateUpdateScreen> {
         }
       },
       child: Scaffold(
-
         appBar: _initAppBar(context),
-
         body: Stack(
           children: <Widget>[
-
             Container(
               decoration: const BoxDecoration(
                 color: colorChineseBlack,
               ),
             ),
-
             _isUploading
-            ? buildCircularProgress()
-            : Center(
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 15.0),
-                height: height/2,
-                child: Stack(
-                  children: <Widget>[
-
-                    BlendMask(
-                      blendMode: BlendMode.softLight,
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: colorChineseBlack,
-                        ),
-                      ),
-                    ),
-
-                    Container(
-                      margin: const EdgeInsets.all(15.0),
-                      child: Column(
+                ? buildCircularProgress()
+                : Center(
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 15.0),
+                      height: height / 2,
+                      child: Stack(
                         children: <Widget>[
-
-                          Expanded(
-                            flex: 4,
-                            child: GestureDetector(
-                              onTap: () => _buildGetImage(context),
-                              child: SizedBox(
-                                height: height,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(6),
-                                  child: Image.file(
-                                    _uri!,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
+                          BlendMask(
+                            blendMode: BlendMode.softLight,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                color: colorChineseBlack,
                               ),
                             ),
                           ),
-
-                          const SizedBox(height: 15,),
-
-                          Expanded(
-                            flex: 1,
-                            child: Center(
-                              child: TextField(
-                                minLines: 1,
-                                maxLines: 5,
-                                inputFormatters: [
-                                  LengthLimitingTextInputFormatter(1024),
-                                ],
-                                style: const TextStyle(color: colorFulvous),
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: 'Subject',
-                                  hintStyle: TextStyle(
-                                    color: Colors.white.withOpacity(0.5),
-                                    fontStyle: FontStyle.italic,
-                                  ),
-                                  filled: true,
-                                  fillColor: colorChineseBlack.withOpacity(0.75),
-                                  contentPadding: const EdgeInsets.all(8.0),
-                                  focusedBorder: const OutlineInputBorder(
-                                    borderSide: BorderSide(color: colorFulvous),
+                          Container(
+                            margin: const EdgeInsets.all(15.0),
+                            child: Column(
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 4,
+                                  child: GestureDetector(
+                                    onTap: () => _buildGetImage(context),
+                                    child: SizedBox(
+                                      height: height,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(6),
+                                        child: Image.file(
+                                          _uri!,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                                onChanged: (input) => _content = input.trim(),
-                                textInputAction: TextInputAction.newline,
-                              ),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Center(
+                                    child: TextField(
+                                      minLines: 1,
+                                      maxLines: 5,
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(1024),
+                                      ],
+                                      style:
+                                          const TextStyle(color: colorFulvous),
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: 'Subject',
+                                        hintStyle: TextStyle(
+                                          color: Colors.white.withOpacity(0.5),
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                        filled: true,
+                                        fillColor:
+                                            colorChineseBlack.withOpacity(0.75),
+                                        contentPadding:
+                                            const EdgeInsets.all(8.0),
+                                        focusedBorder: const OutlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: colorFulvous),
+                                        ),
+                                      ),
+                                      onChanged: (input) =>
+                                          _content = input.trim(),
+                                      textInputAction: TextInputAction.newline,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
+                  ),
           ],
         ),
       ),

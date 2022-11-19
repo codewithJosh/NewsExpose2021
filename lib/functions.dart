@@ -7,8 +7,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:news_expose_2k21/login_screen.dart';
 import 'package:news_expose_2k21/register_screen.dart';
-import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 import 'package:path/path.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 
 const colorChineseBlack = Color(0xff151515);
 const colorFulvous = Color(0xffE57608);
