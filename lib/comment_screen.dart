@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class CommentScreen extends StatefulWidget {
-
   final String updateId;
 
   const CommentScreen({Key? key, required this.updateId}) : super(key: key);

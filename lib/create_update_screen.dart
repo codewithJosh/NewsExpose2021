@@ -135,7 +135,7 @@ class _CreateUpdateScreenState extends State<CreateUpdateScreen> {
       final uploadTask = ref.putFile(_uri);
 
       final updateImage =
-      await (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
+          await (await uploadTask.whenComplete(() {})).ref.getDownloadURL();
 
       if (updateImage.isNotEmpty) {
         final updateId = updatesRef.doc().id;

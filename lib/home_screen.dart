@@ -114,13 +114,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   loadUpdates() => _isLoading
-    ? buildCircularProgress()
-    : SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Column(
-        children: _updates,
-      ),
-    );
+      ? buildCircularProgress()
+      : SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: _updates,
+          ),
+        );
 
   onLoadUpdates() async {
     setState(() {
@@ -131,7 +131,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
     setState(() {
       _isLoading = false;
-      _updates = querySnapshot.docs.map((documentSnapshot) => Update.fromDocument(documentSnapshot)).toList();
+      _updates = querySnapshot.docs
+          .map((documentSnapshot) => Update.fromDocument(documentSnapshot))
+          .toList();
     });
   }
 
@@ -142,8 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       appBar: _initAppBar(),
       body: Stack(
         children: <Widget>[
@@ -155,9 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SafeArea(
             child: Stack(
               children: <Widget>[
-
                 loadUpdates(),
-
                 FutureBuilder(
                     future: usersRef.doc(userId).get(),
                     builder: (context, dataSnapshot) {
@@ -193,5 +192,4 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
-  }
 }

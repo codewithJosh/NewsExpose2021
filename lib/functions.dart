@@ -5,11 +5,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:news_expose_2k21/login_screen.dart';
 import 'package:news_expose_2k21/register_screen.dart';
 import 'package:path/path.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
-import 'package:intl/intl.dart';
 
 const colorChineseBlack = Color(0xff151515);
 const colorFulvous = Color(0xffE57608);
@@ -366,18 +366,22 @@ buildCircularProgress() => Container(
 
 extension(final path, [int level = 1]) => context.extension(path, level);
 
-initTitle2(final text, {final size = 15.0, final color = Colors.white, final fontWeight = FontWeight.normal, final fontFamily = 'Tahoma'}) => Text(
-  text,
-  style: TextStyle(
-    fontWeight: fontWeight,
-    fontFamily: fontFamily,
-    fontSize: size,
-    color: color,
-  ),
-);
+initTitle2(final text,
+        {final size = 15.0,
+        final color = Colors.white,
+        final fontWeight = FontWeight.normal,
+        final fontFamily = 'Tahoma'}) =>
+    Text(
+      text,
+      style: TextStyle(
+        fontWeight: fontWeight,
+        fontFamily: fontFamily,
+        fontSize: size,
+        color: color,
+      ),
+    );
 
 class TimeAgo {
-
   static String getTimeAgo(final updateTimestampFormat) {
     final time = DateFormat('dd-MM-yyyy h:mma').parse(updateTimestampFormat);
     final now = DateTime.now();
@@ -399,12 +403,13 @@ class TimeAgo {
       return 'Just now';
     }
   }
-
 }
 
 initUpdateTimestamp(final updateTimestamp) {
-  final dateToTimestamp = DateTime.fromMillisecondsSinceEpoch(updateTimestamp.millisecondsSinceEpoch);
-  final updateTimestampFormat = DateFormat('dd-MM-yyyy h:mma').format(dateToTimestamp);
+  final dateToTimestamp = DateTime.fromMillisecondsSinceEpoch(
+      updateTimestamp.millisecondsSinceEpoch);
+  final updateTimestampFormat =
+      DateFormat('dd-MM-yyyy h:mma').format(dateToTimestamp);
 
   return TimeAgo.getTimeAgo(updateTimestampFormat);
 }
