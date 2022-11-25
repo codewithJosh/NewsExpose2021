@@ -47,12 +47,13 @@ class Update extends StatefulWidget {
 
 class _UpdateState extends State<Update> {
 
-  late final String _updateImage = widget.updateImage;
-  late final String _updateContent = widget.updateContent;
-  late final Timestamp _updateTimestamp = widget.updateTimestamp;
-  late final String _userId = widget.userId;
-  late final Map _seen = widget.seen;
-  late final int _seenCount = widget.seenCount(_seen);
+  late final _updateId = widget.updateId;
+  late final _updateImage = widget.updateImage;
+  late final _updateContent = widget.updateContent;
+  late final _updateTimestamp = widget.updateTimestamp;
+  late final _userId = widget.userId;
+  late final _seen = widget.seen;
+  late int _seenCount = widget.seenCount(_seen);
   bool _isSeen = false;
   
   _initHead() => Padding(
@@ -101,7 +102,10 @@ class _UpdateState extends State<Update> {
 
         const SizedBox(height: 10.0,),
 
-        Image.network(_updateImage),
+        GestureDetector(
+            onDoubleTap: () => _onSeen(),
+            child: Image.network(_updateImage)
+        ),
 
       ]
   );
@@ -112,28 +116,31 @@ class _UpdateState extends State<Update> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
 
-        Row(
-          children: <Widget>[
+        GestureDetector(
+          onTap: () => _onSeen(),
+          child: Row(
+            children: <Widget>[
 
-            SizedBox(
-              width: 30.0,
-              height: 25.0,
-              child: SvgPicture.string(
-                _isSeen
-                    ? createSeenUIButton
-                    : createUnseenUIButton,
-                allowDrawingOutsideViewBox: true,
+              SizedBox(
+                width: 30.0,
+                height: 25.0,
+                child: SvgPicture.string(
+                  _isSeen
+                      ? createSeenUIButton
+                      : createUnseenUIButton,
+                  allowDrawingOutsideViewBox: true,
+                ),
               ),
-            ),
 
-            const SizedBox(width: 18.0,),
+              const SizedBox(width: 18.0,),
 
-            initTitle2('$_seenCount', size: 17.0, color: _isSeen
-                ? colorFulvous
-                : Colors.white
-            ),
+              initTitle2('$_seenCount', size: 17.0, color: _isSeen
+                  ? colorFulvous
+                  : Colors.white
+              ),
 
-          ],
+            ],
+          ),
         ),
 
         Row(
@@ -158,6 +165,21 @@ class _UpdateState extends State<Update> {
       ],
     ),
   );
+
+  _onSeen() {
+
+    updatesRef
+        .doc(_updateId)
+        .update({'Seen.$userId': !_isSeen});
+
+    setState(() {
+      _seenCount += _isSeen
+          ? -1
+          : 1;
+      _isSeen = !_isSeen;
+    });
+
+  }
 
   @override
   void initState() {
