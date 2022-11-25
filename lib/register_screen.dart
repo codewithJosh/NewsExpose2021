@@ -28,7 +28,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         final userId = user.user!.uid;
 
         addUser() async {
-          final documentSnapshot = await users.doc(userId).get();
+          final documentSnapshot = await usersRef.doc(userId).get();
           final packageInfo = await PackageInfo.fromPlatform();
 
           if (!documentSnapshot.exists) {
@@ -38,7 +38,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const userIsAdmin = false;
             final buildNumber = packageInfo.buildNumber;
 
-            users.doc(userId).set({
+            usersRef.doc(userId).set({
               'build_number': buildNumber,
               'user_bio': userBio,
               'user_email': _email,

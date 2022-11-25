@@ -17,15 +17,13 @@ class User {
     this.userName,
   });
 
-  factory User.fromDocument(final documentSnapshot) {
-    return User(
-      buildNumber: documentSnapshot['build_number'],
-      userBio: documentSnapshot['user_bio'],
-      userEmail: documentSnapshot['user_email'],
-      userId: documentSnapshot['user_id'],
-      userImage: documentSnapshot['user_image'],
-      userIsAdmin: documentSnapshot['user_is_admin'],
-      userName: documentSnapshot['user_name'],
-    );
-  }
+  factory User.fromDocument(final documentSnapshot) => User(
+        buildNumber: documentSnapshot['build_number'],
+        userBio: documentSnapshot['user_bio'],
+        userEmail: documentSnapshot['user_email'],
+        userId: documentSnapshot['user_id'],
+        userImage: documentSnapshot['user_image'],
+        userIsAdmin: documentSnapshot['user_is_admin'],
+        userName: documentSnapshot['user_name'],
+      );
 }
