@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:news_expose_2k21/comment_screen.dart';
 import 'package:news_expose_2k21/functions.dart';
 import 'package:news_expose_2k21/models/user_model.dart';
 
@@ -55,7 +56,7 @@ class _UpdateState extends State<Update> {
   late final _seen = widget.seen;
   late int _seenCount = widget.seenCount(_seen);
   bool _isSeen = false;
-  
+
   _initHead() => Padding(
     padding: const EdgeInsets.only(top: 8.0),
     child: FutureBuilder(
@@ -110,7 +111,7 @@ class _UpdateState extends State<Update> {
       ]
   );
 
-  _initFoot() => Padding(
+  _initFoot(final context) => Padding(
     padding: const EdgeInsets.symmetric(vertical: 18.0),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -143,23 +144,29 @@ class _UpdateState extends State<Update> {
           ),
         ),
 
-        Row(
-          children: <Widget>[
+        GestureDetector(
+          onTap: () => _onComment(
+              context,
+              updateId: _updateId,
+          ),
+          child: Row(
+            children: <Widget>[
 
-            SizedBox(
-              width: 25.0,
-              height: 25.0,
-              child: SvgPicture.string(
-                createCommentUIButton,
-                allowDrawingOutsideViewBox: true,
+              SizedBox(
+                width: 25.0,
+                height: 25.0,
+                child: SvgPicture.string(
+                  createCommentUIButton,
+                  allowDrawingOutsideViewBox: true,
+                ),
               ),
-            ),
 
-            const SizedBox(width: 18.0,),
+              const SizedBox(width: 18.0,),
 
-            initTitle2('0', size: 17.0),
+              initTitle2('0', size: 17.0),
 
-          ],
+            ],
+          ),
         ),
 
       ],
@@ -180,6 +187,14 @@ class _UpdateState extends State<Update> {
     });
 
   }
+
+  Future _onComment(final context, {final updateId}) => Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) {
+    return CommentScreen(
+      updateId: updateId,
+    );
+  }));
 
   @override
   void initState() {
@@ -208,7 +223,7 @@ class _UpdateState extends State<Update> {
 
                 _initBody(),
 
-                _initFoot(),
+                _initFoot(context),
 
               ],
             ),
