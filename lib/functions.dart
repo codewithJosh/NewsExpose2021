@@ -408,13 +408,13 @@ class TimeAgo {
   }
 }
 
-initUpdateTimestamp(final updateTimestamp) {
+initTimestamp(final timestamp) {
   final dateToTimestamp = DateTime.fromMillisecondsSinceEpoch(
-      updateTimestamp.millisecondsSinceEpoch);
-  final updateTimestampFormat =
+      timestamp.millisecondsSinceEpoch);
+  final timestampFormat =
       DateFormat('dd-MM-yyyy h:mma').format(dateToTimestamp);
 
-  return TimeAgo.getTimeAgo(updateTimestampFormat);
+  return TimeAgo.getTimeAgo(timestampFormat);
 }
 
 onFocusLost(final context)

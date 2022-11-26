@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 GestureDetector(
-                  onTap: () => onLoadUpdates(),
+                  onTap: () => _onLoadUpdates(),
                   child: Container(
                     margin: const EdgeInsets.only(left: 20.0),
                     child: SvgPicture.string(
@@ -113,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Navigator.of(context).push(route);
   }
 
-  loadUpdates() => _isLoading
+  _loadUpdates() => _isLoading
       ? buildCircularProgress()
       : SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -122,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         );
 
-  onLoadUpdates() async {
+  _onLoadUpdates() async {
     setState(() {
       _isLoading = true;
     });
@@ -140,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    onLoadUpdates();
+    _onLoadUpdates();
   }
 
   @override
@@ -156,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SafeArea(
             child: Stack(
               children: <Widget>[
-                loadUpdates(),
+                _loadUpdates(),
                 FutureBuilder(
                     future: usersRef.doc(userId).get(),
                     builder: (context, dataSnapshot) {

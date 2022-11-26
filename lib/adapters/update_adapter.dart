@@ -95,7 +95,7 @@ class _UpdateState extends State<Update> {
               title: initTitle2(userBio,
                   size: 17.0, fontWeight: FontWeight.bold, fontFamily: ''),
               subtitle: initTitle2(
-                  '${initUpdateTimestamp(_updateTimestamp)} · $userName'),
+                  '${initTimestamp(_updateTimestamp)} · $userName'),
             );
           },
         ),

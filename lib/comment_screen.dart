@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:news_expose_2k21/adapters/comment_adapter.dart';
 import 'package:news_expose_2k21/functions.dart';
 import 'package:news_expose_2k21/models/user_model.dart';
 
@@ -18,7 +19,9 @@ class CommentScreen extends StatefulWidget {
 class _CommentScreenState extends State<CommentScreen> {
 
   late final String _updateId = widget.updateId;
-  String _commentContent = '';
+  final _commentContentController = TextEditingController();
+  bool _isLoading = false;
+  List<Comment> _comments = [];
 
   _initAppBar() => AppBar(
     systemOverlayStyle: SystemUiOverlayStyle.light,
@@ -39,27 +42,65 @@ class _CommentScreenState extends State<CommentScreen> {
     ),
   );
 
-  _onComment(final context, final userBio, final userImage, final userName) {
+  _onComment(final context, final userBio, final userImage, final userName, final commentContent) {
     onFocusLost(context);
 
-    if (_commentContent.isEmpty) {
+    if (commentContent.isEmpty) {
       buildFlutterToast('Comment cannot be empty!', colorKUCrimson);
     } else {
 
-      addComment() => updatesRef.doc(_updateId).collection('Comments').doc().set({
-          'comment_content': _commentContent,
-          'comment_timestamp': Timestamp.now(),
-          'user_bio': userBio,
-          'user_image': userImage,
-          'user_name': userName,
-        });
+      addComment() => updatesRef
+          .doc(_updateId)
+          .collection('Comments')
+          .doc()
+          .set({
+        'comment_content': commentContent,
+        'comment_timestamp': Timestamp.now(),
+        'user_bio': userBio,
+        'user_image': userImage,
+        'user_name': userName,
+      });
 
       addComment().then((value) {
         setState(() {
-          _commentContent = '';
+          _commentContentController.clear();
+          _onLoadComments();
         });
       });
     }
+  }
+
+  _loadComments() => _isLoading
+      ? buildCircularProgress()
+      : SingleChildScrollView(
+    physics: const BouncingScrollPhysics(),
+    child: Column(
+      children: _comments,
+    ),
+  );
+
+  _onLoadComments() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final querySnapshot = await updatesRef
+        .doc(_updateId)
+        .collection('Comments')
+        .get();
+
+    setState(() {
+      _isLoading = false;
+      _comments = querySnapshot.docs
+          .map((documentSnapshot) => Comment.fromDocument(documentSnapshot))
+          .toList();
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _onLoadComments();
   }
 
   @override
@@ -85,7 +126,7 @@ class _CommentScreenState extends State<CommentScreen> {
               children: <Widget>[
 
                 Expanded(
-                    child: Container()
+                    child: _loadComments(),
                 ),
 
                 Container(
@@ -130,6 +171,7 @@ class _CommentScreenState extends State<CommentScreen> {
                               ),
 
                               title: TextField(
+                                controller: _commentContentController,
                                 inputFormatters: [
                                   LengthLimitingTextInputFormatter(1024),
                                 ],
@@ -143,12 +185,11 @@ class _CommentScreenState extends State<CommentScreen> {
                                     color: colorBrightGray,
                                   ),
                                 ),
-                                onChanged: (input) => _commentContent = input.trim(),
                                 textInputAction: TextInputAction.done,
                               ),
 
                               trailing: GestureDetector(
-                                onTap: () => _onComment(context, userBio, userImage, userName),
+                                onTap: () => _onComment(context, userBio, userImage, userName, _commentContentController.text.trim()),
                                 child: SvgPicture.string(
                                   createSendUIButton,
                                   allowDrawingOutsideViewBox: true,
