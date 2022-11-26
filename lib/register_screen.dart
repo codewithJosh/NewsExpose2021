@@ -18,6 +18,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
 
   _onRegister(final context) async {
+    onFocusLost(context);
     await initProgressDialog(context, 'Signing up');
 
     if (_formKey.currentState!.validate() && _rePassword.isNotEmpty) {
@@ -38,7 +39,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const userIsAdmin = false;
             final buildNumber = packageInfo.buildNumber;
 
-            usersRef.doc(userId).set({
+            return usersRef.doc(userId).set({
               'build_number': buildNumber,
               'user_bio': userBio,
               'user_email': _email,
@@ -78,13 +79,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final width = MediaQuery.of(context).size.width;
 
     return GestureDetector(
-      onTap: () {
-        final currentFocus = FocusScope.of(context);
-
-        if (!currentFocus.hasPrimaryFocus) {
-          currentFocus.unfocus();
-        }
-      },
+      onTap: () => onFocusLost(context),
       child: Scaffold(
         body: SafeArea(
           child: Stack(

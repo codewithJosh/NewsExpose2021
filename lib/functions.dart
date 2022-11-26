@@ -22,6 +22,7 @@ const colorEerieBlack = Color(0xff1D1D1D);
 const colorElectricGreen = Color(0xff00FF00);
 const colorRaisinBlack = Color(0xff262626);
 const colorWindsorTan = Color(0xffB15106);
+const colorBrightGray = Color(0xffEAEAEA);
 
 const linearButton = LinearGradient(
   begin: Alignment(0.0, -1.0),
@@ -79,6 +80,8 @@ const createSeenUIButton =
     '<svg xmlns="http://www.w3.org/2000/svg" width="27.773" height="18.465" viewBox="0 0 27.773 18.465"><path id="Exclusion_2" data-name="Exclusion 2" d="M13.886,18.465a16.632,16.632,0,0,1-6.935-1.521,13.532,13.532,0,0,1-4.244-3.165A12.971,12.971,0,0,1,0,9.233H0V9.226A13.119,13.119,0,0,1,2.707,4.686,13.532,13.532,0,0,1,6.951,1.521a16.569,16.569,0,0,1,13.871,0,13.533,13.533,0,0,1,4.244,3.165,12.971,12.971,0,0,1,2.707,4.546h0V9.24a13.134,13.134,0,0,1-2.706,4.539,13.533,13.533,0,0,1-4.244,3.165A16.635,16.635,0,0,1,13.886,18.465Zm0-14.487a5.255,5.255,0,1,0,5.254,5.255A5.261,5.261,0,0,0,13.887,3.978Zm0,8.257a3,3,0,1,1,3-3A3.006,3.006,0,0,1,13.886,12.235Z" transform="translate(0)" fill="#e57608"/></svg>';
 const createCommentUIButton =
     '<svg xmlns="http://www.w3.org/2000/svg" width="20.35" height="20.094" viewBox="0 0 20.35 20.094"><path id="comment" d="M0,9a9,9,0,1,1,16.808,4.48l1.09,4.06L14.267,16.3A9,9,0,0,1,0,9Z" transform="translate(1 1)" fill="none" stroke="#ccc" stroke-width="2"/></svg>';
+const createSendUIButton =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="25.991" height="21.08" viewBox="0 0 25.991 21.08"><defs><linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox"><stop offset="0" stop-color="#ff7000"/><stop offset="1" stop-color="#f2822a"/></linearGradient></defs><path id="Path_6" data-name="Path 6" d="M-694.8,2024.84l25.991,10.779-25.991,10.3.25-8.634,8.983-2-9.233-3.863Z" transform="translate(694.8 -2024.84)" fill="url(#linear-gradient)"/></svg>';
 
 final userId = firebaseAuth.currentUser!.uid;
 
@@ -412,4 +415,15 @@ initUpdateTimestamp(final updateTimestamp) {
       DateFormat('dd-MM-yyyy h:mma').format(dateToTimestamp);
 
   return TimeAgo.getTimeAgo(updateTimestampFormat);
+}
+
+onFocusLost(final context)
+{
+
+  final currentFocus = FocusScope.of(context);
+
+  if (!currentFocus.hasPrimaryFocus) {
+    currentFocus.unfocus();
+  }
+
 }

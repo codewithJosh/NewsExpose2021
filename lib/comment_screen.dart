@@ -1,6 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:news_expose_2k21/functions.dart';
+import 'package:news_expose_2k21/models/user_model.dart';
 
 class CommentScreen extends StatefulWidget {
   final String updateId;
@@ -12,6 +16,9 @@ class CommentScreen extends StatefulWidget {
 }
 
 class _CommentScreenState extends State<CommentScreen> {
+
+  late final String _updateId = widget.updateId;
+  String _commentContent = '';
 
   _initAppBar() => AppBar(
     systemOverlayStyle: SystemUiOverlayStyle.light,
@@ -32,21 +39,137 @@ class _CommentScreenState extends State<CommentScreen> {
     ),
   );
 
+  _onComment(final context, final userBio, final userImage, final userName) {
+    onFocusLost(context);
+
+    if (_commentContent.isEmpty) {
+      buildFlutterToast('Comment cannot be empty!', colorKUCrimson);
+    } else {
+
+      addComment() => updatesRef.doc(_updateId).collection('Comments').doc().set({
+          'comment_content': _commentContent,
+          'comment_timestamp': Timestamp.now(),
+          'user_bio': userBio,
+          'user_image': userImage,
+          'user_name': userName,
+        });
+
+      addComment().then((value) {
+        setState(() {
+          _commentContent = '';
+        });
+      });
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => GestureDetector(
+      onTap: () => onFocusLost(context),
+      child: Scaffold(
 
-    return Scaffold(
+        appBar: _initAppBar(),
 
-      appBar: _initAppBar(),
+        body: Stack(
+          children: <Widget>[
 
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('res/images/img_background_2.png'),
-            fit: BoxFit.cover,
-          ),
+            Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('res/images/img_background_2.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+
+            Column(
+              children: <Widget>[
+
+                Expanded(
+                    child: Container()
+                ),
+
+                Container(
+                  alignment: Alignment.bottomCenter,
+                  height: 55.0,
+                  decoration: const BoxDecoration(
+                    gradient: linearAppBar,
+                  ),
+                  child: Row(
+                    children: <Widget>[
+
+                      Expanded(
+                        child: FutureBuilder(
+                          future: usersRef.doc(userId).get(),
+                          builder: (context, dataSnapshot) {
+
+                            if (!dataSnapshot.hasData) {
+                              return buildCircularProgress();
+                            }
+
+                            final user = User.fromDocument(dataSnapshot.data);
+
+                            final userBio = user.userBio!;
+                            final userImage = user.userImage!;
+                            final userName = user.userName!;
+
+                            return ListTile(
+
+                              leading: userImage.isNotEmpty
+                                  ? CircleAvatar(
+                                radius: 20.0,
+                                backgroundImage: CachedNetworkImageProvider(userImage),
+                                backgroundColor: colorEerieBlack,
+                              )
+                                  : CircleAvatar(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(22.0),
+                                    gradient: linearProfile,
+                                  ),
+                                ),
+                              ),
+
+                              title: TextField(
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(1024),
+                                ],
+                                style: const TextStyle(color: colorFulvous),
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Add a comment...',
+                                  hintStyle: TextStyle(
+                                    fontFamily: 'Tahoma',
+                                    fontSize: 15.0,
+                                    color: colorBrightGray,
+                                  ),
+                                ),
+                                onChanged: (input) => _commentContent = input.trim(),
+                                textInputAction: TextInputAction.done,
+                              ),
+
+                              trailing: GestureDetector(
+                                onTap: () => _onComment(context, userBio, userImage, userName),
+                                child: SvgPicture.string(
+                                  createSendUIButton,
+                                  allowDrawingOutsideViewBox: true,
+                                ),
+                              ),
+
+                              //
+                            );
+                          },
+                        ),
+                      ),
+
+                    ],
+                  ),
+                ),
+
+              ],
+            ),
+
+          ],
         ),
       ),
     );
-  }
 }
