@@ -145,51 +145,51 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: _initAppBar(),
-      body: Stack(
-        children: <Widget>[
-          Container(
-            decoration: const BoxDecoration(
-              color: colorChineseBlack,
+        appBar: _initAppBar(),
+        body: Stack(
+          children: <Widget>[
+            Container(
+              decoration: const BoxDecoration(
+                color: colorChineseBlack,
+              ),
             ),
-          ),
-          SafeArea(
-            child: Stack(
-              children: <Widget>[
-                _loadUpdates(),
-                FutureBuilder(
-                    future: usersRef.doc(userId).get(),
-                    builder: (context, dataSnapshot) {
-                      if (!dataSnapshot.hasData) {
-                        return buildCircularProgress();
-                      }
+            SafeArea(
+              child: Stack(
+                children: <Widget>[
+                  _loadUpdates(),
+                  FutureBuilder(
+                      future: usersRef.doc(userId).get(),
+                      builder: (context, dataSnapshot) {
+                        if (!dataSnapshot.hasData) {
+                          return buildCircularProgress();
+                        }
 
-                      final user = User.fromDocument(dataSnapshot.data);
+                        final user = User.fromDocument(dataSnapshot.data);
 
-                      return user.userIsAdmin == true
-                          ? Container(
-                              alignment: Alignment.bottomRight,
-                              padding: const EdgeInsets.only(
-                                  right: 25.0, bottom: 25.0),
-                              child: GestureDetector(
-                                onTap: () => _buildGetImage(context),
-                                child: SizedBox(
-                                  width: 75.0,
-                                  height: 75.0,
-                                  child: SvgPicture.string(
-                                    createCreateUpdateUIButton,
-                                    allowDrawingOutsideViewBox: true,
-                                    fit: BoxFit.fill,
+                        return user.userIsAdmin == true
+                            ? Container(
+                                alignment: Alignment.bottomRight,
+                                padding: const EdgeInsets.only(
+                                    right: 25.0, bottom: 25.0),
+                                child: GestureDetector(
+                                  onTap: () => _buildGetImage(context),
+                                  child: SizedBox(
+                                    width: 75.0,
+                                    height: 75.0,
+                                    child: SvgPicture.string(
+                                      createCreateUpdateUIButton,
+                                      allowDrawingOutsideViewBox: true,
+                                      fit: BoxFit.fill,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            )
-                          : Container();
-                    }),
-              ],
+                              )
+                            : Container();
+                      }),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
 }

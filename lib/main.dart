@@ -26,13 +26,11 @@ class Main extends StatefulWidget {
 }
 
 class _MainState extends State<Main> {
-
   initMain() => StreamBuilder<User?>(
-    stream: firebaseAuth.authStateChanges(),
-    builder: (BuildContext context, snapshot) => snapshot.hasData
-        ? const HomeScreen()
-        : const MainScreen(),
-  );
+        stream: firebaseAuth.authStateChanges(),
+        builder: (BuildContext context, snapshot) =>
+            snapshot.hasData ? const HomeScreen() : const MainScreen(),
+      );
 
   @override
   Widget build(BuildContext context) => AnnotatedRegion(

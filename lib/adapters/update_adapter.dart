@@ -80,8 +80,7 @@ class _UpdateState extends State<Update> {
               leading: userImage.isNotEmpty
                   ? CircleAvatar(
                       radius: 25.0,
-                      backgroundImage:
-                          CachedNetworkImageProvider(userImage),
+                      backgroundImage: CachedNetworkImageProvider(userImage),
                       backgroundColor: colorEerieBlack,
                     )
                   : CircleAvatar(
@@ -94,8 +93,8 @@ class _UpdateState extends State<Update> {
                     ),
               title: initTitle2(userBio,
                   size: 17.0, fontWeight: FontWeight.bold, fontFamily: ''),
-              subtitle: initTitle2(
-                  '${initTimestamp(_updateTimestamp)} · $userName'),
+              subtitle:
+                  initTitle2('${initTimestamp(_updateTimestamp)} · $userName'),
             );
           },
         ),
@@ -173,10 +172,12 @@ class _UpdateState extends State<Update> {
     });
   }
 
-  _onComment(final context, final updateId) =>
-      Navigator.push(context, MaterialPageRoute(builder: (context) => CommentScreen(
-          updateId: updateId,
-        )));
+  _onComment(final context, final updateId) => Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => CommentScreen(
+                updateId: updateId,
+              )));
 
   @override
   void initState() {
@@ -186,24 +187,24 @@ class _UpdateState extends State<Update> {
 
   @override
   Widget build(BuildContext context) => Container(
-      margin: const EdgeInsets.all(18.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25.0),
-        color: colorEerieBlack,
-      ),
-      child: Column(
-        children: <Widget>[
-          _initHead(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18.0),
-            child: Column(
-              children: <Widget>[
-                _initBody(),
-                _initFoot(context),
-              ],
+        margin: const EdgeInsets.all(18.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0),
+          color: colorEerieBlack,
+        ),
+        child: Column(
+          children: <Widget>[
+            _initHead(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18.0),
+              child: Column(
+                children: <Widget>[
+                  _initBody(),
+                  _initFoot(context),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
 }

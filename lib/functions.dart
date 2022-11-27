@@ -409,21 +409,18 @@ class TimeAgo {
 }
 
 initTimestamp(final timestamp) {
-  final dateToTimestamp = DateTime.fromMillisecondsSinceEpoch(
-      timestamp.millisecondsSinceEpoch);
+  final dateToTimestamp =
+      DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch);
   final timestampFormat =
       DateFormat('dd-MM-yyyy h:mma').format(dateToTimestamp);
 
   return TimeAgo.getTimeAgo(timestampFormat);
 }
 
-onFocusLost(final context)
-{
-
+onFocusLost(final context) {
   final currentFocus = FocusScope.of(context);
 
   if (!currentFocus.hasPrimaryFocus) {
     currentFocus.unfocus();
   }
-
 }

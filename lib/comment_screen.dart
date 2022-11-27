@@ -17,49 +17,44 @@ class CommentScreen extends StatefulWidget {
 }
 
 class _CommentScreenState extends State<CommentScreen> {
-
   late final String _updateId = widget.updateId;
   final _commentContentController = TextEditingController();
   bool _isLoading = false;
   List<Comment> _comments = [];
 
   _initAppBar() => AppBar(
-    systemOverlayStyle: SystemUiOverlayStyle.light,
-    backgroundColor: colorChineseBlack,
-    toolbarHeight: 55.0,
-
-    flexibleSpace: SafeArea(
-      child: Container(
-        decoration: const BoxDecoration(
-          gradient: linearAppBar,
+        systemOverlayStyle: SystemUiOverlayStyle.light,
+        backgroundColor: colorChineseBlack,
+        toolbarHeight: 55.0,
+        flexibleSpace: SafeArea(
+          child: Container(
+            decoration: const BoxDecoration(
+              gradient: linearAppBar,
+            ),
+            child: Container(
+              alignment: Alignment.centerLeft,
+              margin: const EdgeInsets.only(left: 60.0),
+              child: initTitle2('Comments', size: 23.0),
+            ),
+          ),
         ),
-        child: Container(
-          alignment: Alignment.centerLeft,
-          margin: const EdgeInsets.only(left: 60.0),
-          child: initTitle2('Comments', size: 23.0),
-        ),
-      ),
-    ),
-  );
+      );
 
-  _onComment(final context, final userBio, final userImage, final userName, final commentContent) {
+  _onComment(final context, final userBio, final userImage, final userName,
+      final commentContent) {
     onFocusLost(context);
 
     if (commentContent.isEmpty) {
       buildFlutterToast('Comment cannot be empty!', colorKUCrimson);
     } else {
-
-      addComment() => updatesRef
-          .doc(_updateId)
-          .collection('Comments')
-          .doc()
-          .set({
-        'comment_content': commentContent,
-        'comment_timestamp': Timestamp.now(),
-        'user_bio': userBio,
-        'user_image': userImage,
-        'user_name': userName,
-      });
+      addComment() =>
+          updatesRef.doc(_updateId).collection('Comments').doc().set({
+            'comment_content': commentContent,
+            'comment_timestamp': Timestamp.now(),
+            'user_bio': userBio,
+            'user_image': userImage,
+            'user_name': userName,
+          });
 
       addComment().then((value) {
         setState(() {
@@ -73,21 +68,19 @@ class _CommentScreenState extends State<CommentScreen> {
   _loadComments() => _isLoading
       ? buildCircularProgress()
       : SingleChildScrollView(
-    physics: const BouncingScrollPhysics(),
-    child: Column(
-      children: _comments,
-    ),
-  );
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: _comments,
+          ),
+        );
 
   _onLoadComments() async {
     setState(() {
       _isLoading = true;
     });
 
-    final querySnapshot = await updatesRef
-        .doc(_updateId)
-        .collection('Comments')
-        .get();
+    final querySnapshot =
+        await updatesRef.doc(_updateId).collection('Comments').get();
 
     setState(() {
       _isLoading = false;
@@ -105,112 +98,108 @@ class _CommentScreenState extends State<CommentScreen> {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-      onTap: () => onFocusLost(context),
-      child: Scaffold(
-
-        appBar: _initAppBar(),
-
-        body: Stack(
-          children: <Widget>[
-
-            Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('res/images/img_background_2.png'),
-                  fit: BoxFit.cover,
+        onTap: () => onFocusLost(context),
+        child: Scaffold(
+          appBar: _initAppBar(),
+          body: Stack(
+            children: <Widget>[
+              Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('res/images/img_background_2.png'),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-            ),
-
-            Column(
-              children: <Widget>[
-
-                Expanded(
+              Column(
+                children: <Widget>[
+                  Expanded(
                     child: _loadComments(),
-                ),
-
-                Container(
-                  alignment: Alignment.bottomCenter,
-                  height: 55.0,
-                  decoration: const BoxDecoration(
-                    gradient: linearAppBar,
                   ),
-                  child: Row(
-                    children: <Widget>[
+                  Container(
+                    alignment: Alignment.bottomCenter,
+                    height: 55.0,
+                    decoration: const BoxDecoration(
+                      gradient: linearAppBar,
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: FutureBuilder(
+                            future: usersRef.doc(userId).get(),
+                            builder: (context, dataSnapshot) {
+                              if (!dataSnapshot.hasData) {
+                                return buildCircularProgress();
+                              }
 
-                      Expanded(
-                        child: FutureBuilder(
-                          future: usersRef.doc(userId).get(),
-                          builder: (context, dataSnapshot) {
+                              final user = User.fromDocument(dataSnapshot.data);
 
-                            if (!dataSnapshot.hasData) {
-                              return buildCircularProgress();
-                            }
+                              final userBio = user.userBio!;
+                              final userImage = user.userImage!;
+                              final userName = user.userName!;
 
-                            final user = User.fromDocument(dataSnapshot.data);
+                              return ListTile(
+                                leading: userImage.isNotEmpty
+                                    ? CircleAvatar(
+                                        radius: 20.0,
+                                        backgroundImage:
+                                            CachedNetworkImageProvider(
+                                                userImage),
+                                        backgroundColor: colorEerieBlack,
+                                      )
+                                    : CircleAvatar(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(22.0),
+                                            gradient: linearProfile,
+                                          ),
+                                        ),
+                                      ),
 
-                            final userBio = user.userBio!;
-                            final userImage = user.userImage!;
-                            final userName = user.userName!;
+                                title: TextField(
+                                  controller: _commentContentController,
+                                  inputFormatters: [
+                                    LengthLimitingTextInputFormatter(1024),
+                                  ],
+                                  style: const TextStyle(color: colorFulvous),
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: 'Add a comment...',
+                                    hintStyle: TextStyle(
+                                      fontFamily: 'Tahoma',
+                                      fontSize: 15.0,
+                                      color: colorBrightGray,
+                                    ),
+                                  ),
+                                  textInputAction: TextInputAction.done,
+                                ),
 
-                            return ListTile(
-
-                              leading: userImage.isNotEmpty
-                                  ? CircleAvatar(
-                                radius: 20.0,
-                                backgroundImage: CachedNetworkImageProvider(userImage),
-                                backgroundColor: colorEerieBlack,
-                              )
-                                  : CircleAvatar(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(22.0),
-                                    gradient: linearProfile,
+                                trailing: GestureDetector(
+                                  onTap: () => _onComment(
+                                      context,
+                                      userBio,
+                                      userImage,
+                                      userName,
+                                      _commentContentController.text.trim()),
+                                  child: SvgPicture.string(
+                                    createSendUIButton,
+                                    allowDrawingOutsideViewBox: true,
                                   ),
                                 ),
-                              ),
 
-                              title: TextField(
-                                controller: _commentContentController,
-                                inputFormatters: [
-                                  LengthLimitingTextInputFormatter(1024),
-                                ],
-                                style: const TextStyle(color: colorFulvous),
-                                decoration: const InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: 'Add a comment...',
-                                  hintStyle: TextStyle(
-                                    fontFamily: 'Tahoma',
-                                    fontSize: 15.0,
-                                    color: colorBrightGray,
-                                  ),
-                                ),
-                                textInputAction: TextInputAction.done,
-                              ),
-
-                              trailing: GestureDetector(
-                                onTap: () => _onComment(context, userBio, userImage, userName, _commentContentController.text.trim()),
-                                child: SvgPicture.string(
-                                  createSendUIButton,
-                                  allowDrawingOutsideViewBox: true,
-                                ),
-                              ),
-
-                              //
-                            );
-                          },
+                                //
+                              );
+                            },
+                          ),
                         ),
-                      ),
-
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-
-              ],
-            ),
-
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
 }
