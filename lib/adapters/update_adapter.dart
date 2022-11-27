@@ -30,7 +30,7 @@ class Update extends StatefulWidget {
         updateContent: documentSnapshot['update_content'],
         updateTimestamp: documentSnapshot['update_timestamp'],
         userId: documentSnapshot['user_id'],
-        seen: documentSnapshot['Seen'],
+        seen: documentSnapshot['seen'],
       );
 
   seenCount(final seen) {
@@ -71,12 +71,16 @@ class _UpdateState extends State<Update> {
             }
 
             final user = User.fromDocument(dataSnapshot.data);
+
+            final userBio = user.userBio!;
+            final userImage = user.userImage!;
+            final userName = user.userName!;
+
             return ListTile(
-              leading: user.userImage!.isNotEmpty
+              leading: userImage.isNotEmpty
                   ? CircleAvatar(
                       radius: 25.0,
-                      backgroundImage:
-                          CachedNetworkImageProvider(user.userImage!),
+                      backgroundImage: CachedNetworkImageProvider(userImage),
                       backgroundColor: colorEerieBlack,
                     )
                   : CircleAvatar(
@@ -87,10 +91,10 @@ class _UpdateState extends State<Update> {
                         ),
                       ),
                     ),
-              title: initTitle2(user.userBio,
+              title: initTitle2(userBio,
                   size: 17.0, fontWeight: FontWeight.bold, fontFamily: ''),
-              subtitle: initTitle2(
-                  '${initUpdateTimestamp(_updateTimestamp)} · ${user.userName}'),
+              subtitle:
+                  initTitle2('${initTimestamp(_updateTimestamp)} · $userName'),
             );
           },
         ),
@@ -160,7 +164,7 @@ class _UpdateState extends State<Update> {
       );
 
   _onSeen() {
-    updatesRef.doc(_updateId).update({'Seen.$userId': !_isSeen});
+    updatesRef.doc(_updateId).update({'seen.$userId': !_isSeen});
 
     setState(() {
       _seenCount += _isSeen ? -1 : 1;
@@ -168,10 +172,12 @@ class _UpdateState extends State<Update> {
     });
   }
 
-  _onComment(final context, final updateId) =>
-      Navigator.push(context, MaterialPageRoute(builder: (context) => CommentScreen(
-          updateId: updateId,
-        )));
+  _onComment(final context, final updateId) => Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => CommentScreen(
+                updateId: updateId,
+              )));
 
   @override
   void initState() {
@@ -181,24 +187,24 @@ class _UpdateState extends State<Update> {
 
   @override
   Widget build(BuildContext context) => Container(
-      margin: const EdgeInsets.all(18.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25.0),
-        color: colorEerieBlack,
-      ),
-      child: Column(
-        children: <Widget>[
-          _initHead(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18.0),
-            child: Column(
-              children: <Widget>[
-                _initBody(),
-                _initFoot(context),
-              ],
+        margin: const EdgeInsets.all(18.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25.0),
+          color: colorEerieBlack,
+        ),
+        child: Column(
+          children: <Widget>[
+            _initHead(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18.0),
+              child: Column(
+                children: <Widget>[
+                  _initBody(),
+                  _initFoot(context),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
 }

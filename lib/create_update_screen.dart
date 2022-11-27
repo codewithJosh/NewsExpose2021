@@ -118,6 +118,7 @@ class _CreateUpdateScreenState extends State<CreateUpdateScreen> {
       );
 
   _onCreateUpdate(final context) async {
+    onFocusLost(context);
     setState(() {
       _isUploading = true;
       _pendingRequests++;
@@ -140,22 +141,22 @@ class _CreateUpdateScreenState extends State<CreateUpdateScreen> {
       if (updateImage.isNotEmpty) {
         final updateId = updatesRef.doc().id;
 
-        addUpdates() async {
+        addUpdate() async {
           final documentSnapshot = await updatesRef.doc(updateId).get();
 
           if (!documentSnapshot.exists) {
-            updatesRef.doc(updateId).set({
+            return updatesRef.doc(updateId).set({
               'update_id': updateId,
               'update_image': updateImage,
               'update_content': _updateContent,
               'update_timestamp': Timestamp.now(),
               'user_id': userId,
-              'Seen': {},
+              'seen': {},
             });
           }
         }
 
-        addUpdates().then((value) => Navigator.pop(context));
+        addUpdate().then((value) => Navigator.pop(context));
       }
     }
   }
@@ -165,13 +166,7 @@ class _CreateUpdateScreenState extends State<CreateUpdateScreen> {
     final height = MediaQuery.of(context).size.height;
 
     return GestureDetector(
-      onTap: () {
-        final currentFocus = FocusScope.of(context);
-
-        if (!currentFocus.hasPrimaryFocus) {
-          currentFocus.unfocus();
-        }
-      },
+      onTap: () => onFocusLost(context),
       child: Scaffold(
         appBar: _initAppBar(context),
         body: Stack(

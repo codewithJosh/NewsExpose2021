@@ -17,6 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
   _onLogin(final context) async {
+    onFocusLost(context);
     await initProgressDialog(context, 'Logging in');
 
     if (_formKey.currentState!.validate()) {
@@ -51,13 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final width = MediaQuery.of(context).size.width;
 
     return GestureDetector(
-      onTap: () {
-        final currentFocus = FocusScope.of(context);
-
-        if (!currentFocus.hasPrimaryFocus) {
-          currentFocus.unfocus();
-        }
-      },
+      onTap: () => onFocusLost(context),
       child: Scaffold(
         body: SafeArea(
           child: Stack(
@@ -140,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         decoration:
                                             initInputDecoration('Password'),
                                         obscureText: true,
-                                        textInputAction: TextInputAction.next,
+                                        textInputAction: TextInputAction.done,
                                         onFieldSubmitted: (_) =>
                                             FocusScope.of(context).nextFocus(),
                                         validator: (input) {
